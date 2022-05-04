@@ -1,5 +1,5 @@
 package db;
 
-public class ProductDB {
+public class ProductDB implements ProductDBIF {
 
 }
