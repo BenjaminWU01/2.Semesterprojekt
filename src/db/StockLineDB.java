@@ -30,33 +30,30 @@ public class StockLineDB implements StockLineDBIF {
 	@Override
 	public List<StockLine> getStockLines(int idProduct) throws SQLException {
 		List<StockLine> ListSL = new ArrayList();
-        findStockLineIDPS.setInt(1, idProduct);
-        ResultSet rs = findStockLineIDPS.executeQuery();
-        int i = 0;
-        while (rs.next()) {
-            ListSL.add(createStockLine(rs.getInt("idStockLine")));
-            i++;
-        }
-        return ListSL;
-    }
+		findStockLineIDPS.setInt(1, idProduct);
+		ResultSet rs = findStockLineIDPS.executeQuery();
+		int i = 0;
+		while (rs.next()) {
+			ListSL.add(createStockLine(rs.getInt("idStockLine")));
+			i++;
+		}
+		return ListSL;
+	}
 
 	private StockLine createStockLine(int idStockLine) throws SQLException {
 		findStockLinesPS.setInt(1, idStockLine);
-        ResultSet rs = findStockLinesPS.executeQuery();
-        StockLine sl = new StockLine(rs.getInt("qtyAtLoc"), rs.getInt(idStockLine));
-        return sl;
+		ResultSet rs = findStockLinesPS.executeQuery();
+		StockLine sl = new StockLine(rs.getInt("qtyAtLoc"), rs.getInt(idStockLine));
+		return sl;
 	}
-	
-	public void updateStockLine(Product product) throws SQLException{
+
+	public void updateStockLine(Product product) throws SQLException {
 		List<StockLine> ls = product.getStockLines();
-		for(int i = 0; i < ls.size(); i++) {
+		for (int i = 0; i < ls.size(); i++) {
 			updateStockLinesPS.setInt(1, ls.get(i).getQtyAtLoc());
 			updateStockLinesPS.setInt(2, ls.get(i).getIdStockLine());
 			updateStockLinesPS.executeQuery();
 		}
-		
+
 	}
 }
-
-
-
