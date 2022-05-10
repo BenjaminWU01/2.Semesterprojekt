@@ -7,8 +7,10 @@ public class StockLine {
 		this.qtyAtLoc = qtyAtLoc;
 	}
 
-	public void updateStockLine(int qtyAtLoc) {
-		this.qtyAtLoc = qtyAtLoc;
+	public void updateStockLine() {
+		
 	}
+	
+	
 
 }
