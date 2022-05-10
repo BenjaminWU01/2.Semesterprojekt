@@ -1,6 +1,7 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Product {
 
@@ -17,6 +18,12 @@ public class Product {
 
 	public void addStockLines(StockLine stockLine) {
 		stockLines.add(stockLine);
+	}
+	
+	public List<StockLine> getStockLines(){
+		
+		return stockLines;
+		
 	}
 
 }
