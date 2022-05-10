@@ -6,7 +6,7 @@ public class OrderUI {
 
 	}
 
-	public void addProduct() {
+	public void addProduct(int prodNo, int quantity, String size) {
 
 	}
 
