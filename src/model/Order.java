@@ -11,6 +11,7 @@ public class Order {
 	private LocalDate orderDate;
 	private LocalDate shipDate;
 	private ArrayList orderLines;
+	private String status;
 
 	public Order() {
 		orderLines = new ArrayList<>();
@@ -68,9 +69,18 @@ public class Order {
 		orderLines.add(ol);
 		return this;
 	}
+<<<<<<< HEAD
 
 	public String toString() {
 		return "Order [orderNo=" + orderNo + ", trackingNo=" + trackingNo + ", invoiceNo=" + invoiceNo + ", orderDate="
 				+ orderDate + ", shippedDate=" + shipDate;
 	}
+=======
+	
+	public String getStatus() {
+		return this.status;
+	}
+	
+	
+>>>>>>> dd18a7a597ba5689918870c37fdc96f543aad038
 }
