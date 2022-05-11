@@ -14,7 +14,7 @@ public class ProductCtrl {
 		productDB = new ProductDB();
 	}
 
-	public Product getProduct(int prodNo, String size) {
+	public Product getProduct(String prodNo, String size) {
 		try {
 			productDB.getProduct(prodNo, size);
 		} catch (SQLException e) {

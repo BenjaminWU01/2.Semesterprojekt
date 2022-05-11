@@ -26,7 +26,7 @@ public class OrderCtrl {
 		return order;
 	}
 
-	public Order addProduct(int prodNo, int quantity, String size) {
+	public Order addProduct(String prodNo, int quantity, String size) {
 		Product p = productCtrl.getProduct(prodNo, size);
 		OrderLine ol = new OrderLine(p, quantity);
 		order.addOrderLine(ol);
