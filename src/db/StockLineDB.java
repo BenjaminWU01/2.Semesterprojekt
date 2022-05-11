@@ -31,10 +31,15 @@ public class StockLineDB implements StockLineDBIF {
 	@Override
 	public List<StockLine> getStockLines(int idProduct) throws SQLException {
 		List<StockLine> ListSL = new ArrayList();
+		List<Integer> tempList = new ArrayList();
 		findStockLineIDPS.setInt(1, idProduct);
 		ResultSet rs = findStockLineIDPS.executeQuery();
 		while (rs.next()) {
-			int id = rs.getInt("idStockLine");
+			tempList.add(rs.getInt("idStockLine"));
+		}
+		rs.close();
+		for (int i = 0; i < tempList.size(); i++) {
+			int id = tempList.get(i);
 			System.out.println(id);
 			StockLine sl = createStockLine(id);
 			ListSL.add(sl);
@@ -44,13 +49,10 @@ public class StockLineDB implements StockLineDBIF {
 	}
 
 	private StockLine createStockLine(int idStockLine) throws SQLException {
-		StockLine sl = null;
 		findStockLinesPS.setInt(1, idStockLine);
 		ResultSet rs = findStockLinesPS.executeQuery();
 		System.out.println(rs.next());
-		if (rs.next()) {
-			sl = new StockLine(rs.getInt("idStockLine"), rs.getInt("qtyAtLoc"));
-		}
+		StockLine sl = new StockLine(rs.getInt("qtyAtLoc"), rs.getInt("idStockLine"));
 		return sl;
 	}
 
