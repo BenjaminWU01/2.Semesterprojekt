@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 public class Order {
 	private ArrayList orderLines;
+	private String status;
 
 	public Order() {
 		orderLines = new ArrayList<>();
@@ -13,4 +14,10 @@ public class Order {
 		orderLines.add(ol);
 		return this;
 	}
+	
+	public String getStatus() {
+		return this.status;
+	}
+	
+	
 }

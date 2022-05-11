@@ -27,6 +27,12 @@ public class OrderDB implements OrderDBIF {
 
 		return null;
 	}
+
+	public static ResultSet getAllOrders() {
+		return null;
+		
+		
+	}
 	
 	
 
