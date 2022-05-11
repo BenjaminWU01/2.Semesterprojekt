@@ -33,6 +33,11 @@ public class OrderDB implements OrderDBIF {
 		
 		
 	}
+
+	public static void processOldestOrder(String orderNo) {
+		// Prepared Statement til Benny tak
+		
+	}
 	
 	
 
