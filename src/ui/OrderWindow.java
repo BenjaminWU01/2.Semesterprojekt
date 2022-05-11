@@ -12,58 +12,76 @@ import javax.swing.JTable;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 
 import java.awt.Font;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class OrderWindow {
 
 	private static JFrame f;
-	private static JScrollPane p;
-	private static JScrollPane p2;
-	private static JLabel l2;
-	private static JTable t;
-	private static JTable t2;
+	private static JScrollPane sp_0;
+	private static JScrollPane sp_1;
+	private static JLabel l_1;
+	private static JTable t_0;
+	private static JTable t_1;
+	private static JPanel p_0;
+	private static JPanel p_1;
+	private static JLabel l_0;
+	private static JButton b_0;
+	private static JButton b_1;
+
 	private static String[] columnNames = { "OrderNo", "Name", "Size", "Quantity", "Price" };
-	private static Object[][] data = { { "1234", "Højhæle", "L", Integer.valueOf(5), Float.valueOf(300) },
-			{ "1234", "Højhæle", "L", Integer.valueOf(5), Float.valueOf(300) },
-			{ "1234", "Højhæle", "L", Integer.valueOf(5), Float.valueOf(300) } };
-	private static JPanel panel;
-	private static JPanel panel_1;
-	private static JLabel l;
-	private static JButton b;
-	private static JButton b2;
+	private static Object[][] data = {
+			{ "1234", "Højhæle", LocalDate.of(2001, 3, 15), Integer.valueOf(5), Float.valueOf(300) },
+			{ "1234", "Højhæle", LocalDate.of(2003, 3, 26), Integer.valueOf(5), Float.valueOf(300) },
+			{ "1234", "Højhæle", LocalDate.of(1975, 9, 15), Integer.valueOf(5), Float.valueOf(300) } };
 
 	public static void main(String[] args) {
 
 		f = new JFrame();
-		t = new JTable(data, columnNames);
-		t2 = new JTable(data, columnNames);
-		p = new JScrollPane(t);
-		p2 = new JScrollPane(t2);
-		panel = new JPanel();
-		panel_1 = new JPanel();
-		l = new JLabel("Waiting orders:");
-		l2 = new JLabel("Current orders: ");
-		b = new JButton("Begin order");
-		b2 = new JButton("Finish order");
+		t_0 = new JTable(data, columnNames);
+		t_1 = new JTable(data, columnNames);
+		sp_0 = new JScrollPane(t_0);
+		sp_1 = new JScrollPane(t_1);
+		p_0 = new JPanel();
+		p_1 = new JPanel();
+		l_0 = new JLabel("Waiting orders:");
+		l_1 = new JLabel("Current orders: ");
+		b_0 = new JButton("Begin order");
+		b_0.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				processOldestOrder();
+			}
+		});
+		b_1 = new JButton("Finish order");
+		b_1.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				finishOrder();
+			}
+		});
 
-		f.getContentPane().add(panel);
-		f.getContentPane().add(panel_1);
-		panel.add(l);
-		panel.add(p);
-		panel.add(b);
-		panel_1.add(l2);
-		panel_1.add(p2);
-		panel_1.add(b2);
+		f.getContentPane().add(p_0);
+		f.getContentPane().add(p_1);
+		p_0.add(l_0);
+		p_0.add(sp_0);
+		p_0.add(b_0);
+		p_1.add(l_1);
+		p_1.add(sp_1);
+		p_1.add(b_1);
 
 		f.setResizable(false);
-		b.setVisible(true);
 
 		f.setTitle("Current Order");
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -71,41 +89,26 @@ public class OrderWindow {
 		f.setLocation(960, 0);
 		f.getContentPane().setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 
-		t.setVisible(true);
-
-		p.setVisible(true);
-		p.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-
-		l2.setFont(new Font("Tahoma", Font.PLAIN, 30));
-
-		t2.setVisible(true);
-
-		p2.setVisible(true);
-
-		l.setVerticalAlignment(SwingConstants.TOP);
-		l.setHorizontalAlignment(SwingConstants.CENTER);
-		l.setFont(new Font("Tahoma", Font.PLAIN, 30));
+		l_0.setFont(new Font("Tahoma", Font.PLAIN, 30));
+		l_1.setFont(new Font("Tahoma", Font.PLAIN, 30));
 
 		f.setPreferredSize(new Dimension(580, 1080));
-		panel.setPreferredSize(new Dimension(580, 380));
-		panel_1.setPreferredSize(new Dimension(580, 380));
-		p.setPreferredSize(new Dimension(452, 300));
-		p2.setPreferredSize(new Dimension(452, 300));
-		b.setPreferredSize(new Dimension(200, 25));
-		b2.setPreferredSize(new Dimension(200, 25));
+		p_0.setPreferredSize(new Dimension(580, 380));
+		p_1.setPreferredSize(new Dimension(580, 380));
+		sp_0.setPreferredSize(new Dimension(452, 300));
+		sp_1.setPreferredSize(new Dimension(452, 300));
+		b_0.setPreferredSize(new Dimension(200, 25));
+		b_1.setPreferredSize(new Dimension(200, 25));
 		f.setSize(580, 1080);
 
-		try {
-			updateLists();
+	}
 
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	private static ResultSet getAllOrdersDB() {
+		return OrderCtrl.getAllOrders();
 	}
 
 	private static void updateLists() throws SQLException {
-		ResultSet rs = OrderCtrl.getAllOrders();
+		ResultSet rs = getAllOrdersDB();
 		List<Order> list = buildObjects(rs);
 		List<Order> waitingList = new ArrayList<>();
 		List<Order> currentList = new ArrayList<>();
@@ -118,8 +121,8 @@ public class OrderWindow {
 				}
 			}
 		}
-		editWaitingTable(waitingList);
-		editCurrentTable(currentList);
+		updateWaitingTable(waitingList);
+		updateCurrentTable(currentList);
 	}
 
 	private static Order buildObject(ResultSet rs) throws SQLException {
@@ -137,7 +140,8 @@ public class OrderWindow {
 		return result;
 	}
 
-	private static void editWaitingTable(List<Order> list) {
+	// Updates the top table with the correct values from the DB
+	private static void updateWaitingTable(List<Order> list) {
 		DefaultTableModel dtm = new DefaultTableModel();
 		dtm.addColumn("OrderNo");
 		dtm.addColumn("");
@@ -147,38 +151,73 @@ public class OrderWindow {
 		if (!list.isEmpty()) {
 			for (Order o : list) {
 				int i = 0;
-				t.getModel().setValueAt(o, 0, i);
-				t.getModel().setValueAt(o, 1, i);
-				t.getModel().setValueAt(o, 2, i);
-				t.getModel().setValueAt(o, 3, i);
-				t.getModel().setValueAt(o, 4, i);
+				t_0.getModel().setValueAt(o, 0, i);
+				t_0.getModel().setValueAt(o, 1, i);
+				t_0.getModel().setValueAt(o, 2, i);
+				t_0.getModel().setValueAt(o, 3, i);
+				t_0.getModel().setValueAt(o, 4, i);
 				i++;
 
 			}
 		}
-		t.setModel(dtm);
+		t_0.setModel(dtm);
 	}
 
-	private static void editCurrentTable(List<Order> list) {
+	// Updates the bottom table with the correct values from the DB
+	private static void updateCurrentTable(List<Order> list) {
 		DefaultTableModel dtm = new DefaultTableModel();
 		dtm.addColumn("OrderNo");
 		dtm.addColumn("");
 		dtm.addColumn("");
 		dtm.addColumn("Date");
 		dtm.addColumn("Status");
+		TableModel tm = t_1.getModel();
 		if (!list.isEmpty()) {
 			for (Order o : list) {
 				int i = 0;
-				t.getModel().setValueAt(o, 0, i);
-				t.getModel().setValueAt(o, 1, i);
-				t.getModel().setValueAt(o, 2, i);
-				t.getModel().setValueAt(o, 3, i);
-				t.getModel().setValueAt(o, 4, i);
+				tm.setValueAt(o, 0, i);
+				tm.setValueAt(o, 1, i);
+				tm.setValueAt(o, 2, i);
+				tm.setValueAt(o, 3, i);
+				tm.setValueAt(o, 4, i);
 				i++;
 
 			}
 		}
-		t2.setModel(dtm);
+		t_1.setModel(dtm);
+	}
+
+	private static String findOldestOrder() {
+		TableModel checkModel = t_0.getModel();
+		LocalDate oldestOrderDate = LocalDate.of(1972, 1, 5);
+		String orderNo = null;
+		for (int i = 0; i < checkModel.getRowCount(); i++) {
+			String date = checkModel.getValueAt(i, 2).toString();
+			LocalDate newDate = LocalDate.of(Integer.valueOf(date.substring(0, 4)),
+					Integer.valueOf(date.substring(5, 7)), Integer.valueOf(date.substring(8, 10)));
+			if (newDate.isBefore(oldestOrderDate)) {
+				oldestOrderDate = newDate;
+				orderNo = checkModel.getValueAt(i, 0).toString();
+			}
+		}
+		System.out.println(oldestOrderDate);
+		return orderNo;
+	}
+
+	private static void processOldestOrder() {
+		processOldestOrderDB(findOldestOrder());
+	}
+
+	private static void processOldestOrderDB(String orderNo) {
+		OrderCtrl.processOldestOrder(orderNo);
+	}
+
+	private static void finishOrder() {
+		finishOrderDB();
+	}
+
+	private static void finishOrderDB() {
+
 	}
 
 }

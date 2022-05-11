@@ -44,4 +44,9 @@ public class OrderCtrl {
 		return null;
 
 	}
+
+	public static void processOldestOrder(String orderNo) {
+		OrderDB.processOldestOrder(orderNo);
+		
+	}
 }
