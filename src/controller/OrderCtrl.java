@@ -1,5 +1,8 @@
 package controller;
 
+import java.sql.ResultSet;
+
+import db.*;
 import model.Order;
 import model.OrderLine;
 import model.Product;
@@ -11,6 +14,10 @@ public class OrderCtrl {
 	public OrderCtrl() {
 
 		productCtrl = new ProductCtrl();
+	}
+
+	public static ResultSet getAllOrders() {
+		return OrderDB.getAllOrders();
 	}
 
 	public Order createOrder() {
@@ -37,5 +44,4 @@ public class OrderCtrl {
 		return null;
 
 	}
-
 }
