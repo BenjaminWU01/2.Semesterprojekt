@@ -13,7 +13,7 @@ public class TryMe {
 
 		OrderUI orderUI = new OrderUI();
 		orderUI.registerOrder();
-		orderUI.addProduct(115, 5, "Large");
+		orderUI.addProduct("115", 5, "Large");
 		// Tests the disconnect from the DB
 		DBConnection.getInstance().disconnect();
 	}

@@ -11,9 +11,9 @@ import model.StockLine;
 
 public class ProductDB implements ProductDBIF {
 	private static final String FIND_PRODUCT = "select Product.[idProduct], [sizeDesc], [prodNo], [prodDesc] from Product "
-			+ "FULL OUTER JOIN Size " + "ON Size.idSize = Product.idSize" + "JOIN ProductStockLine "
-			+ "ON ProductStockLine.idProduct = Product.idProduct" + "JOIN StockLine "
-			+ "ON ProductStockLine.idStockLine = StockLine.idStockLine" + "WHERE prodNo = ? and sizeDesc = ?  ";
+			+ "FULL OUTER JOIN Size " + "ON Size.idSize = Product.idSize " + "JOIN ProductStockLine "
+			+ "ON ProductStockLine.idProduct = Product.idProduct" + " JOIN StockLine "
+			+ "ON ProductStockLine.idStockLine = StockLine.idStockLine" + " WHERE prodNo = ? and sizeDesc = ?  ";
 
 	private PreparedStatement findProductPS;
 	private StockLineDBIF stockLineDB;
@@ -26,9 +26,9 @@ public class ProductDB implements ProductDBIF {
 		}
 	}
 
-	public Product getProduct(int productNo, String size) throws SQLException {
+	public Product getProduct(String productNo, String size) throws SQLException {
 		Product p = null;
-		findProductPS.setInt(1, productNo);
+		findProductPS.setString(1, productNo);
 		findProductPS.setString(2, size);
 		ResultSet rs = findProductPS.executeQuery();
 		if (rs.next()) {
@@ -49,11 +49,11 @@ public class ProductDB implements ProductDBIF {
 
 	public List<StockLine> getStockLine(int idProduct) throws SQLException {
 		List<StockLine> stockLines = stockLineDB.getStockLines(idProduct);
-		return null;
+		return stockLines;
 
 	}
 
-	public void updateStockLine() {
+	public void updateStockLine(Product product) {
 
 	}
 

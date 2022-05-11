@@ -15,7 +15,7 @@ public class OrderUI {
 		order = orderCtrl.createOrder();
 	}
 
-	public void addProduct(int prodNo, int quantity, String size) {
+	public void addProduct(String prodNo, int quantity, String size) {
 		orderCtrl.addProduct(prodNo, quantity, size);
 		order.toString();
 	}

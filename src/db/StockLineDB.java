@@ -2,6 +2,7 @@ package db;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,8 +11,8 @@ import model.Product;
 import model.StockLine;
 
 public class StockLineDB implements StockLineDBIF {
-	private static final String FIND_STOCKLINEID = "select * from ProductStockLine where idProduct = ?";
-	private static final String FIND_STOCKLINES = "select * from StockLine where idStockLine = ?";
+	private static final String FIND_STOCKLINEID = "select [idStockLine] from ProductStockLine where idProduct = ?";
+	private static final String FIND_STOCKLINES = "select [idStockLine], [qtyAtLoc] from StockLine where idStockLine = ?";
 	private static final String UPDATE_STOCKLINES = "Update StockLines set qtyAtLoc = ?, where idStockLine = ?";
 
 	private PreparedStatement findStockLineIDPS;
@@ -32,18 +33,24 @@ public class StockLineDB implements StockLineDBIF {
 		List<StockLine> ListSL = new ArrayList();
 		findStockLineIDPS.setInt(1, idProduct);
 		ResultSet rs = findStockLineIDPS.executeQuery();
-		int i = 0;
 		while (rs.next()) {
-			ListSL.add(createStockLine(rs.getInt("idStockLine")));
-			i++;
+			int id = rs.getInt("idStockLine");
+			System.out.println(id);
+			StockLine sl = createStockLine(id);
+			ListSL.add(sl);
 		}
+		System.out.println(ListSL.get(1).getQtyAtLoc());
 		return ListSL;
 	}
 
 	private StockLine createStockLine(int idStockLine) throws SQLException {
+		StockLine sl = null;
 		findStockLinesPS.setInt(1, idStockLine);
 		ResultSet rs = findStockLinesPS.executeQuery();
-		StockLine sl = new StockLine(rs.getInt("qtyAtLoc"), rs.getInt(idStockLine));
+		System.out.println(rs.next());
+		if (rs.next()) {
+			sl = new StockLine(rs.getInt("idStockLine"), rs.getInt("qtyAtLoc"));
+		}
 		return sl;
 	}
 
