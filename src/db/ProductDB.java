@@ -10,8 +10,9 @@ import model.Size;
 import model.StockLine;
 
 public class ProductDB implements ProductDBIF {
-	private static final String FIND_PRODUCT = "select * from Product where ?, ?";
-	
+	private static final String FIND_PRODUCT = "select * from Product "
+			+ "FULL OUTER JOIN Size ON Size.idSize = Product.idSize WHERE prodNo = ? and sizeDesc = ? ";
+
 	private PreparedStatement findProductPS;
 	private StockLineDBIF stockLineDB;
 
