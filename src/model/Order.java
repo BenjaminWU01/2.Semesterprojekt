@@ -3,15 +3,18 @@ package model;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-
 public class Order {
-	
+
 	private int orderNo;
 	private int trackingNo;
 	private int invoiceNo;
 	private LocalDate orderDate;
 	private LocalDate shipDate;
 	private ArrayList orderLines;
+
+	public Order() {
+		orderLines = new ArrayList<>();
+	}
 
 	public int getOrderNo() {
 		return orderNo;
@@ -61,12 +64,13 @@ public class Order {
 		this.orderLines = orderLines;
 	}
 
-	public Order() {
-		orderLines = new ArrayList<>();
-	}
-
 	public Order addOrderLine(OrderLine ol) {
 		orderLines.add(ol);
 		return this;
+	}
+
+	public String toString() {
+		return "Order [orderNo=" + orderNo + ", trackingNo=" + trackingNo + ", invoiceNo=" + invoiceNo + ", orderDate="
+				+ orderDate + ", shippedDate=" + shipDate;
 	}
 }

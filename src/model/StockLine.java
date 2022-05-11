@@ -8,10 +8,6 @@ public class StockLine {
 		this.qtyAtLoc = qtyAtLoc;
 		this.idStockLine = idStockLine;
 	}
-
-	public void updateStockLine() {
-		
-	}
 	
 	public int getQtyAtLoc() {
 		

@@ -1,5 +1,7 @@
 package controller;
 
+import java.sql.SQLException;
+
 import db.ProductDB;
 import db.ProductDBIF;
 import model.Product;
@@ -12,7 +14,12 @@ public class ProductCtrl {
 		productDB = new ProductDB();
 	}
 
-	public Product getProduct(int prodNo, Size s) {
+	public Product getProduct(int prodNo, String size) {
+		try {
+			productDB.getProduct(prodNo, size);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		return null;
 
 	}
