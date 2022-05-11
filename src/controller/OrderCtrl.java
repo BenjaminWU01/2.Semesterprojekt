@@ -1,6 +1,7 @@
 package controller;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import db.*;
 import model.Order;
@@ -26,7 +27,7 @@ public class OrderCtrl {
 		return order;
 	}
 
-	public Order addProduct(String prodNo, int quantity, String size) {
+	public Order addProduct(String prodNo, int quantity, String size) throws SQLException {
 		Product p = productCtrl.getProduct(prodNo, size);
 		OrderLine ol = new OrderLine(p, quantity);
 		order.addOrderLine(ol);
@@ -46,7 +47,6 @@ public class OrderCtrl {
 	}
 
 	public static void processOldestOrder(String orderNo) {
-		OrderDB.processOldestOrder(orderNo);
-		
+		// OrderDB.processOldestOrder(orderNo);
 	}
 }

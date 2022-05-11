@@ -6,7 +6,7 @@ import db.DBConnection;
 
 public class TryMe {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws SQLException {
 
 		// Tests out DBConnection and prints out ConnectionId
 		System.out.println(DBConnection.getInstance().getConnection());

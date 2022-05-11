@@ -1,5 +1,7 @@
 package ui;
 
+import java.sql.SQLException;
+
 import controller.OrderCtrl;
 import model.Order;
 
@@ -15,9 +17,8 @@ public class OrderUI {
 		order = orderCtrl.createOrder();
 	}
 
-	public void addProduct(String prodNo, int quantity, String size) {
+	public void addProduct(String prodNo, int quantity, String size) throws SQLException {
 		orderCtrl.addProduct(prodNo, quantity, size);
-		order.toString();
 	}
 
 	public void addCustomer() {
