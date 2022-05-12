@@ -3,6 +3,7 @@ package ui;
 import java.sql.SQLException;
 
 import controller.OrderCtrl;
+import db.DataAccessException;
 import model.Order;
 import model.Size;
 
@@ -10,7 +11,7 @@ public class OrderUI {
 	private OrderCtrl orderCtrl;
 	private Order order;
 
-	public OrderUI() {
+	public OrderUI() throws DataAccessException {
 		orderCtrl = new OrderCtrl();
 	}
 

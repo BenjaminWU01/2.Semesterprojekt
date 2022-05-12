@@ -2,82 +2,90 @@ package model;
 
 public class Contact {
 
-		private String name;
-		private String address;
-		private String zipcode;
-		private String countrycode;
-		private String city;
-		private String mainProneNo;
-		private String mainEmail;
-		
-		public Contact(String name, String address, String zipcode, String countrycode, String city, String mainProneNo,
-				String mainEmail) {
-			super();
-			this.name = name;
-			this.address = address;
-			this.zipcode = zipcode;
-			this.countrycode = countrycode;
-			this.city = city;
-			this.mainProneNo = mainProneNo;
-			this.mainEmail = mainEmail;
-		}
+	private String name;
+	private String address;
+	private String zipcode;
+	private String countrycode;
+	private String city;
+	private String mainProneNo;
+	private String mainEmail;
+	private int idContact;
 
-		public String getName() {
-			return name;
-		}
+	public Contact(String name, String address, String zipcode, String countrycode, String city, String mainProneNo,
+			String mainEmail, int idContact) {
+		super();
+		this.name = name;
+		this.address = address;
+		this.zipcode = zipcode;
+		this.countrycode = countrycode;
+		this.city = city;
+		this.mainProneNo = mainProneNo;
+		this.mainEmail = mainEmail;
+		this.setIdContact(idContact);
+	}
 
-		public void setName(String name) {
-			this.name = name;
-		}
+	public String getName() {
+		return name;
+	}
 
-		public String getAddress() {
-			return address;
-		}
+	public void setName(String name) {
+		this.name = name;
+	}
 
-		public void setAddress(String address) {
-			this.address = address;
-		}
+	public String getAddress() {
+		return address;
+	}
 
-		public String getZipcode() {
-			return zipcode;
-		}
+	public void setAddress(String address) {
+		this.address = address;
+	}
 
-		public void setZipcode(String zipcode) {
-			this.zipcode = zipcode;
-		}
+	public String getZipcode() {
+		return zipcode;
+	}
 
-		public String getCountrycode() {
-			return countrycode;
-		}
+	public void setZipcode(String zipcode) {
+		this.zipcode = zipcode;
+	}
 
-		public void setCountrycode(String countrycode) {
-			this.countrycode = countrycode;
-		}
+	public String getCountrycode() {
+		return countrycode;
+	}
 
-		public String getCity() {
-			return city;
-		}
+	public void setCountrycode(String countrycode) {
+		this.countrycode = countrycode;
+	}
 
-		public void setCity(String city) {
-			this.city = city;
-		}
+	public String getCity() {
+		return city;
+	}
 
-		public String getMainProneNo() {
-			return mainProneNo;
-		}
+	public void setCity(String city) {
+		this.city = city;
+	}
 
-		public void setMainProneNo(String mainProneNo) {
-			this.mainProneNo = mainProneNo;
-		}
+	public String getMainProneNo() {
+		return mainProneNo;
+	}
 
-		public String getMainEmail() {
-			return mainEmail;
-		}
+	public void setMainProneNo(String mainProneNo) {
+		this.mainProneNo = mainProneNo;
+	}
 
-		public void setMainEmail(String mainEmail) {
-			this.mainEmail = mainEmail;
-		}
-		
-		
-		
+	public String getMainEmail() {
+		return mainEmail;
+	}
+
+	public void setMainEmail(String mainEmail) {
+		this.mainEmail = mainEmail;
+	}
+
+	public int getIdContact() {
+		return idContact;
+	}
+
+	public void setIdContact(int idContact) {
+		this.idContact = idContact;
+	}
+
 }

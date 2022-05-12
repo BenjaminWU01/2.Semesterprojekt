@@ -6,6 +6,9 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import db.DataAccessException;
+
 import javax.swing.JTextField;
 import javax.swing.JTable;
 import javax.swing.JButton;
@@ -48,8 +51,10 @@ public class AppWindow extends JFrame {
 
 	/**
 	 * Create the frame.
+	 * 
+	 * @throws DataAccessException
 	 */
-	public AppWindow() {
+	public AppWindow() throws DataAccessException {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1200, 800);
 		contentPane = new JPanel();
@@ -109,7 +114,7 @@ public class AppWindow extends JFrame {
 		openWindow();
 	}
 
-	public void openWindow() {
+	public void openWindow() throws DataAccessException {
 		ow.main(null);
 	}
 }

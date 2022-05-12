@@ -7,13 +7,13 @@ import java.util.List;
 import model.Order;
 import model.OrderLine;
 
-public class OrderlineDB implements OrderlineDBIF {
+public class OrderLineDB implements OrderLineDBIF {
 
 	private static final String COMMIT_ORDERLINES = "INSERT INTO OrderLine VALUES?, ?, ?, ?";
 
 	private PreparedStatement commitOrderLinesPS;
 
-	public OrderlineDB() {
+	public OrderLineDB() {
 		try {
 			commitOrderLinesPS = DBConnection.getInstance().getConnection().prepareStatement(COMMIT_ORDERLINES);
 		} catch (SQLException e) {
@@ -21,6 +21,7 @@ public class OrderlineDB implements OrderlineDBIF {
 
 	}
 
+	// i 0 = idOrder, i 1 = idProduct, i 2 = idSize
 	public void commitOrderLines(Order order, List<Integer> idSQL) {
 		List<OrderLine> tempList = order.getOrderLines();
 		try {

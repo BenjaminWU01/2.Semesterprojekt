@@ -3,11 +3,12 @@ package ui;
 import java.sql.SQLException;
 
 import db.DBConnection;
+import db.DataAccessException;
 import model.Size;
 
 public class TryMe {
 
-	public static void main(String[] args) throws SQLException {
+	public static void main(String[] args) throws SQLException, DataAccessException {
 
 		// Tests out DBConnection and prints out ConnectionId
 		System.out.println(DBConnection.getInstance().getConnection());

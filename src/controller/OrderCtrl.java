@@ -15,10 +15,12 @@ public class OrderCtrl {
 	private ProductCtrl productCtrl;
 	private Order order;
 	private UserSession userSession;
+	private OrderDBIF orderDB;
 
-	public OrderCtrl() {
+	public OrderCtrl() throws DataAccessException {
 		userSession = userSession.getInstance();
 		productCtrl = new ProductCtrl();
+		orderDB = new OrderDB();
 	}
 
 	public List<Order> getOrders() throws DataAccessException {

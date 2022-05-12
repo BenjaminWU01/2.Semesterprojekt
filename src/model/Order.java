@@ -18,7 +18,7 @@ public class Order {
 	public Order() {
 		orderLines = new ArrayList<>();
 	}
-	
+
 	public Order(String orderNo, LocalDate orderDate, int trackingNo, int invoiceNo, int contact, String status) {
 		orderLines = new ArrayList<>();
 		this.orderNo = orderNo;
@@ -94,6 +94,9 @@ public class Order {
 	public void addCustomer(Contact customer) {
 		this.customer = customer;
 	}
-	
+
+	public Contact getContact() {
+		return this.customer;
+	}
 
 }
