@@ -5,24 +5,35 @@ import java.util.ArrayList;
 
 public class Order {
 
-	private int orderNo;
+	private String orderNo;
 	private int trackingNo;
 	private int invoiceNo;
 	private LocalDate orderDate;
 	private LocalDate shipDate;
-	private ArrayList orderLines;
+	private ArrayList<OrderLine> orderLines;
 	private String status;
-	private Contact Customer;
+	private Contact customer;
+	private int contactId;
 
 	public Order() {
 		orderLines = new ArrayList<>();
 	}
+	
+	public Order(String orderNo, LocalDate orderDate, int trackingNo, int invoiceNo, int contact, String status) {
+		orderLines = new ArrayList<>();
+		this.orderNo = orderNo;
+		this.orderDate = orderDate;
+		this.trackingNo = trackingNo;
+		this.invoiceNo = invoiceNo;
+		this.contactId = contact;
+		this.status = status;
+	}
 
-	public int getOrderNo() {
+	public String getOrderNo() {
 		return orderNo;
 	}
 
-	public void setOrderNo(int orderNo) {
+	public void setOrderNo(String orderNo) {
 		this.orderNo = orderNo;
 	}
 
@@ -62,7 +73,7 @@ public class Order {
 		return orderLines;
 	}
 
-	public void setOrderLines(ArrayList orderLines) {
+	public void setOrderLines(ArrayList<OrderLine> orderLines) {
 		this.orderLines = orderLines;
 	}
 
@@ -73,7 +84,7 @@ public class Order {
 
 	public String toString() {
 		return "Order [orderNo=" + orderNo + ", trackingNo=" + trackingNo + ", invoiceNo=" + invoiceNo + ", orderDate="
-				+ orderDate + ", shippedDate=" + shipDate;
+				+ orderDate + ", shippedDate=" + shipDate + ", status=" + status;
 	}
 
 	public String getStatus() {
@@ -81,7 +92,7 @@ public class Order {
 	}
 
 	public void addCustomer(Contact customer) {
-		this.Customer = customer;
+		this.customer = customer;
 	}
 	
 

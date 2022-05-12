@@ -1,6 +1,7 @@
 package ui;
 
 import controller.*;
+import db.DataAccessException;
 import model.Order;
 
 import javax.swing.JButton;
@@ -9,8 +10,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.ScrollPaneConstants;
-import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
@@ -18,7 +17,6 @@ import java.awt.Font;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.awt.Dimension;
@@ -42,11 +40,11 @@ public class OrderWindow {
 
 	private static String[] columnNames = { "OrderNo", "Name", "Size", "Quantity", "Price" };
 	private static Object[][] data = {
-			{ "1234", "Højhæle", LocalDate.of(2001, 3, 15), Integer.valueOf(5), Float.valueOf(300) },
-			{ "1234", "Højhæle", LocalDate.of(2003, 3, 26), Integer.valueOf(5), Float.valueOf(300) },
-			{ "1234", "Højhæle", LocalDate.of(1975, 9, 15), Integer.valueOf(5), Float.valueOf(300) } };
+			{ "1234", "Højhæle", LocalDate.of(2001, 3, 15), Integer.valueOf(1), Float.valueOf(300) },
+			{ "2345", "Kjole", LocalDate.of(2003, 3, 26), Integer.valueOf(3), Float.valueOf(450) },
+			{ "4321", "T-shirt", LocalDate.of(1975, 9, 15), Integer.valueOf(5), Float.valueOf(200) } };
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws DataAccessException {
 
 		f = new JFrame();
 		t_0 = new JTable(data, columnNames);
@@ -68,7 +66,10 @@ public class OrderWindow {
 		b_1.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
-				finishOrder();
+				if (t_1.getSelectedRow() >= 0 && t_1.getSelectedColumn() >= 0) {
+					System.out.println(t_1.getValueAt(t_1.getSelectedRow(), 0).toString());
+					finishOrder(t_1.getValueAt(t_1.getSelectedRow(), 0).toString());
+				}
 			}
 		});
 
@@ -100,24 +101,28 @@ public class OrderWindow {
 		b_0.setPreferredSize(new Dimension(200, 25));
 		b_1.setPreferredSize(new Dimension(200, 25));
 		f.setSize(580, 1080);
+		
+		updateLists();
 
 	}
 
-	private static ResultSet getAllOrdersDB() {
-		return OrderCtrl.getAllOrders();
+	private static List<Order> getOrders() throws DataAccessException {
+		OrderCtrl oc = new OrderCtrl();
+		return oc.getOrders();
 	}
 
-	private static void updateLists() throws SQLException {
-		ResultSet rs = getAllOrdersDB();
-		List<Order> list = buildObjects(rs);
+	private static void updateLists() throws DataAccessException {
+		List<Order> list = getOrders();
 		List<Order> waitingList = new ArrayList<>();
 		List<Order> currentList = new ArrayList<>();
 		if (!list.isEmpty()) {
 			for (Order o : list) {
-				if (o.getStatus().equals("placed")) {
+				if (o.getStatus().contains("pending")) {
 					waitingList.add(o);
+					System.out.println("WaitingList + " + o);
 				} else if (o.getStatus().equals("current")) {
 					currentList.add(o);
+					System.out.println("CurrentList + " + o);
 				}
 			}
 		}
@@ -150,12 +155,12 @@ public class OrderWindow {
 		dtm.addColumn("Status");
 		if (!list.isEmpty()) {
 			for (Order o : list) {
-				int i = 0;
-				t_0.getModel().setValueAt(o, 0, i);
-				t_0.getModel().setValueAt(o, 1, i);
-				t_0.getModel().setValueAt(o, 2, i);
-				t_0.getModel().setValueAt(o, 3, i);
-				t_0.getModel().setValueAt(o, 4, i);
+				int i = 1;
+				t_0.getModel().setValueAt(o.getOrderNo(), i, 0);
+				t_0.getModel().setValueAt(o.getInvoiceNo(), i, 1);
+				t_0.getModel().setValueAt(o.getTrackingNo(), i, 2);
+				t_0.getModel().setValueAt(o.getOrderDate(), i, 3);
+				t_0.getModel().setValueAt(o.getStatus(), i, 4);
 				i++;
 
 			}
@@ -175,21 +180,21 @@ public class OrderWindow {
 		if (!list.isEmpty()) {
 			for (Order o : list) {
 				int i = 0;
-				tm.setValueAt(o, 0, i);
-				tm.setValueAt(o, 1, i);
-				tm.setValueAt(o, 2, i);
-				tm.setValueAt(o, 3, i);
-				tm.setValueAt(o, 4, i);
+				tm.setValueAt(o.getOrderNo(), 0, i);
+				tm.setValueAt(o.getInvoiceNo(), 1, i);
+				tm.setValueAt(o.getTrackingNo(), 2, i);
+				tm.setValueAt(o.getOrderDate(), 3, i);
+				tm.setValueAt(o.getStatus(), 4, i);
 				i++;
 
 			}
 		}
 		t_1.setModel(dtm);
 	}
-
+	
 	private static String findOldestOrder() {
 		TableModel checkModel = t_0.getModel();
-		LocalDate oldestOrderDate = LocalDate.of(1972, 1, 5);
+		LocalDate oldestOrderDate = LocalDate.now();
 		String orderNo = null;
 		for (int i = 0; i < checkModel.getRowCount(); i++) {
 			String date = checkModel.getValueAt(i, 2).toString();
@@ -200,24 +205,17 @@ public class OrderWindow {
 				orderNo = checkModel.getValueAt(i, 0).toString();
 			}
 		}
-		System.out.println(oldestOrderDate);
+		System.out.println(orderNo);
 		return orderNo;
 	}
 
 	private static void processOldestOrder() {
-		processOldestOrderDB(findOldestOrder());
+		OrderCtrl.processOldestOrder(findOldestOrder());
 	}
 
-	private static void processOldestOrderDB(String orderNo) {
-		OrderCtrl.processOldestOrder(orderNo);
+	private static void finishOrder(String orderNo) {
+		
 	}
 
-	private static void finishOrder() {
-		finishOrderDB();
-	}
-
-	private static void finishOrderDB() {
-
-	}
 
 }

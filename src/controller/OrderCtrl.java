@@ -2,6 +2,7 @@ package controller;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 import db.*;
 import model.Contact;
@@ -20,8 +21,9 @@ public class OrderCtrl {
 		productCtrl = new ProductCtrl();
 	}
 
-	public static ResultSet getAllOrders() {
-		return OrderDB.getAllOrders();
+	public List<Order> getOrders() throws DataAccessException {
+		OrderDB odb = new OrderDB();
+		return odb.getOrders();
 	}
 
 	public Order createOrder() {
@@ -41,7 +43,7 @@ public class OrderCtrl {
 
 	public Order addCustomer() {
 		Contact customer = userSession.getCustomer();
-		order.addCustomer(customer);
+//		order.addCustomer(customer);
 		return order;
 	}
 
