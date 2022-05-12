@@ -14,13 +14,9 @@ public class ProductCtrl {
 		productDB = new ProductDB();
 	}
 
-	public Product getProduct(String prodNo, String size) {
-		try {
-			productDB.getProduct(prodNo, size);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return null;
+	public Product getProduct(String prodNo, String size) throws SQLException {
+		Product product = productDB.getProduct(prodNo, size);
+		return product;
 
 	}
 

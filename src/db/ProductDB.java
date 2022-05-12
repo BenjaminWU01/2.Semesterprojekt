@@ -26,15 +26,20 @@ public class ProductDB implements ProductDBIF {
 		}
 	}
 
-	public Product getProduct(String productNo, String size) throws SQLException {
+	public Product getProduct(String productNo, String size) {
 		Product p = null;
-		findProductPS.setString(1, productNo);
-		findProductPS.setString(2, size);
-		ResultSet rs = findProductPS.executeQuery();
-		if (rs.next()) {
-			p = buildProduct(rs);
-			int idProduct = rs.getInt("idProduct");
-			getStockLine(idProduct);
+		try {
+			findProductPS.setString(1, productNo);
+			findProductPS.setString(2, size);
+			ResultSet rs = findProductPS.executeQuery();
+			if (rs.next()) {
+				p = buildProduct(rs);
+				int idProduct = rs.getInt("idProduct");
+				getStockLine(idProduct);
+			}
+		} catch (SQLException e) {
+			System.out.println("Produktet kunne ikke findes");
+			e.printStackTrace();
 		}
 		return p;
 	}
