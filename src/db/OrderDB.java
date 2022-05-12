@@ -9,7 +9,7 @@ import model.Product;
 import model.StockLine;
 
 public class OrderDB implements OrderDBIF {
-	private static final String FIND_PRODUCT = "select * from Product where ?, ?";
+	private static final String FIND_PRODUCT = "select * from Orders";
 
 	private PreparedStatement findProductPS;
 
