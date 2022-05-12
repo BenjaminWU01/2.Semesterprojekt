@@ -15,7 +15,7 @@ public class OrderCtrl {
 	private UserSession userSession;
 
 	public OrderCtrl() {
-		userSession = new UserSession();
+		userSession = userSession.getInstance();
 		productCtrl = new ProductCtrl();
 	}
 
