@@ -101,7 +101,7 @@ public class OrderWindow {
 		b_0.setPreferredSize(new Dimension(200, 25));
 		b_1.setPreferredSize(new Dimension(200, 25));
 		f.setSize(580, 1080);
-		
+
 		updateLists();
 
 	}
@@ -120,7 +120,7 @@ public class OrderWindow {
 				if (o.getStatus().contains("pending")) {
 					waitingList.add(o);
 					System.out.println("WaitingList + " + o);
-				} else if (o.getStatus().equals("current")) {
+				} else if (o.getStatus().contains("running")) {
 					currentList.add(o);
 					System.out.println("CurrentList + " + o);
 				}
@@ -149,21 +149,18 @@ public class OrderWindow {
 	private static void updateWaitingTable(List<Order> list) {
 		DefaultTableModel dtm = new DefaultTableModel();
 		dtm.addColumn("OrderNo");
-		dtm.addColumn("");
-		dtm.addColumn("");
-		dtm.addColumn("Date");
+		dtm.addColumn("InvoiceNo");
+		dtm.addColumn("TrackingNo");
+		dtm.addColumn("OrderDate");
 		dtm.addColumn("Status");
-		if (!list.isEmpty()) {
-			for (Order o : list) {
-				int i = 1;
-				t_0.getModel().setValueAt(o.getOrderNo(), i, 0);
-				t_0.getModel().setValueAt(o.getInvoiceNo(), i, 1);
-				t_0.getModel().setValueAt(o.getTrackingNo(), i, 2);
-				t_0.getModel().setValueAt(o.getOrderDate(), i, 3);
-				t_0.getModel().setValueAt(o.getStatus(), i, 4);
-				i++;
-
-			}
+		for (Order o : list) {
+			int i = 0;
+			dtm.insertRow(i, new Object[] { o.getOrderNo(), 
+											o.getInvoiceNo(),
+											o.getTrackingNo(),
+											o.getOrderDate(),
+											o.getStatus() });
+			i++;
 		}
 		t_0.setModel(dtm);
 	}
@@ -172,32 +169,28 @@ public class OrderWindow {
 	private static void updateCurrentTable(List<Order> list) {
 		DefaultTableModel dtm = new DefaultTableModel();
 		dtm.addColumn("OrderNo");
-		dtm.addColumn("");
-		dtm.addColumn("");
-		dtm.addColumn("Date");
+		dtm.addColumn("InvoiceNo");
+		dtm.addColumn("TrackingNo");
+		dtm.addColumn("OrderDate");
 		dtm.addColumn("Status");
-		TableModel tm = t_1.getModel();
-		if (!list.isEmpty()) {
-			for (Order o : list) {
-				int i = 0;
-				tm.setValueAt(o.getOrderNo(), 0, i);
-				tm.setValueAt(o.getInvoiceNo(), 1, i);
-				tm.setValueAt(o.getTrackingNo(), 2, i);
-				tm.setValueAt(o.getOrderDate(), 3, i);
-				tm.setValueAt(o.getStatus(), 4, i);
-				i++;
-
-			}
+		for (Order o : list) {
+			int i = 0;
+			dtm.insertRow(i, new Object[] { o.getOrderNo(), 
+											o.getInvoiceNo(),
+											o.getTrackingNo(),
+											o.getOrderDate(),
+											o.getStatus() });
+			i++;
 		}
 		t_1.setModel(dtm);
 	}
-	
+
 	private static String findOldestOrder() {
 		TableModel checkModel = t_0.getModel();
 		LocalDate oldestOrderDate = LocalDate.now();
 		String orderNo = null;
 		for (int i = 0; i < checkModel.getRowCount(); i++) {
-			String date = checkModel.getValueAt(i, 2).toString();
+			String date = checkModel.getValueAt(i, 3).toString();
 			LocalDate newDate = LocalDate.of(Integer.valueOf(date.substring(0, 4)),
 					Integer.valueOf(date.substring(5, 7)), Integer.valueOf(date.substring(8, 10)));
 			if (newDate.isBefore(oldestOrderDate)) {
@@ -216,6 +209,5 @@ public class OrderWindow {
 	private static void finishOrder(String orderNo) {
 		
 	}
-
 
 }
