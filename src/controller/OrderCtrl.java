@@ -8,6 +8,7 @@ import model.Contact;
 import model.Order;
 import model.OrderLine;
 import model.Product;
+import model.Size;
 
 public class OrderCtrl {
 	private ProductCtrl productCtrl;
@@ -29,7 +30,7 @@ public class OrderCtrl {
 		return order;
 	}
 
-	public Order addProduct(String prodNo, int quantity, String size) throws SQLException {
+	public Order addProduct(String prodNo, int quantity, Size size) throws SQLException {
 		Product p = productCtrl.getProduct(prodNo, size);
 		OrderLine ol = new OrderLine(p, quantity);
 		order.addOrderLine(ol);

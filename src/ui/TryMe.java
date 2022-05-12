@@ -3,6 +3,7 @@ package ui;
 import java.sql.SQLException;
 
 import db.DBConnection;
+import model.Size;
 
 public class TryMe {
 
@@ -13,7 +14,8 @@ public class TryMe {
 
 		OrderUI orderUI = new OrderUI();
 		orderUI.registerOrder();
-		orderUI.addProduct("115", 5, "Large");
+		Size s = new Size("Large");
+		orderUI.addProduct("115", 5, s);
 		// Tests the disconnect from the DB
 		DBConnection.getInstance().disconnect();
 	}

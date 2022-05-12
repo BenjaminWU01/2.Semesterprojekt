@@ -10,9 +10,9 @@ import model.Size;
 import model.StockLine;
 
 public class ProductDB implements ProductDBIF {
-	private static final String FIND_PRODUCT = "select Product.[idProduct], [sizeDesc], [prodNo], [prodDesc] from Product "
-			+ "FULL OUTER JOIN Size " + "ON Size.idSize = Product.idSize " + "JOIN ProductStockLine "
-			+ "ON ProductStockLine.idProduct = Product.idProduct" + " JOIN StockLine "
+	private static final String FIND_PRODUCT = "SELECT DISTINCT Product.[idProduct], [sizeDesc], [prodNo], [prodDesc] from Product "
+			+ "LEFT JOIN Size " + "ON Size.idSize = Product.idSize " + "INNER JOIN ProductStockLine "
+			+ "ON ProductStockLine.idProduct = Product.idProduct" + " INNER JOIN StockLine "
 			+ "ON ProductStockLine.idStockLine = StockLine.idStockLine" + " WHERE prodNo = ? and sizeDesc = ?  ";
 
 	private PreparedStatement findProductPS;
@@ -26,11 +26,11 @@ public class ProductDB implements ProductDBIF {
 		}
 	}
 
-	public Product getProduct(String productNo, String size) {
+	public Product getProduct(String productNo, Size size) {
 		Product p = null;
 		try {
 			findProductPS.setString(1, productNo);
-			findProductPS.setString(2, size);
+			findProductPS.setString(2, size.getSizeDesc());
 			ResultSet rs = findProductPS.executeQuery();
 			if (rs.next()) {
 				p = buildProduct(rs);

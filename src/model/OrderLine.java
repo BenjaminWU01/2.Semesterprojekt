@@ -5,7 +5,23 @@ public class OrderLine {
 	private int quantity;
 
 	public OrderLine(Product p, int quantity) {
-		this.product = p;
+		this.setProduct(p);
+		this.setQuantity(quantity);
+	}
+
+	public Product getProduct() {
+		return product;
+	}
+
+	public void setProduct(Product product) {
+		this.product = product;
+	}
+
+	public int getQuantity() {
+		return quantity;
+	}
+
+	public void setQuantity(int quantity) {
 		this.quantity = quantity;
 	}
 }

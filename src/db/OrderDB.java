@@ -24,6 +24,7 @@ public class OrderDB implements OrderDBIF {
 			findProductPS.setInt(1, productNo);
 			findProductPS.setString(2, size);
 			ResultSet rs = findProductPS.executeQuery();
+			
 
 		return null;
 	}

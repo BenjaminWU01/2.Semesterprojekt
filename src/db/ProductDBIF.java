@@ -10,7 +10,7 @@ import model.StockLine;
 
 public interface ProductDBIF {
 
-	public Product getProduct(String productNo, String size) throws SQLException;
+	public Product getProduct(String productNo, Size size) throws SQLException;
 
 	public List<StockLine> getStockLine(int idProduct) throws SQLException;
 

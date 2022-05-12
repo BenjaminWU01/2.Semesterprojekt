@@ -4,6 +4,7 @@ import java.sql.SQLException;
 
 import controller.OrderCtrl;
 import model.Order;
+import model.Size;
 
 public class OrderUI {
 	private OrderCtrl orderCtrl;
@@ -17,7 +18,7 @@ public class OrderUI {
 		order = orderCtrl.createOrder();
 	}
 
-	public void addProduct(String prodNo, int quantity, String size) throws SQLException {
+	public void addProduct(String prodNo, int quantity, Size size) throws SQLException {
 		orderCtrl.addProduct(prodNo, quantity, size);
 	}
 

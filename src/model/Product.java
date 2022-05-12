@@ -19,11 +19,17 @@ public class Product {
 	public void addStockLines(StockLine stockLine) {
 		stockLines.add(stockLine);
 	}
-	
-	public List<StockLine> getStockLines(){
-		
+
+	public List<StockLine> getStockLines() {
+
 		return stockLines;
-		
+
+	}
+
+	@Override
+	public String toString() {
+		return "Order [prodNo=" + productNo + ", product description=" + productDescription + ", size="
+				+ size.getSizeDesc();
 	}
 
 }
