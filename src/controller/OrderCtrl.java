@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import db.*;
+import model.Contact;
 import model.Order;
 import model.OrderLine;
 import model.Product;
@@ -11,9 +12,10 @@ import model.Product;
 public class OrderCtrl {
 	private ProductCtrl productCtrl;
 	private Order order;
+	private UserSession userSession;
 
 	public OrderCtrl() {
-
+		userSession = new UserSession();
 		productCtrl = new ProductCtrl();
 	}
 
@@ -37,8 +39,9 @@ public class OrderCtrl {
 	}
 
 	public Order addCustomer() {
-		return null;
-
+		Contact customer = userSession.getCustomer();
+		order.addCustomer(customer);
+		return order;
 	}
 
 	public Order completeOrder() {

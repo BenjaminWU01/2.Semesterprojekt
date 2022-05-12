@@ -12,6 +12,7 @@ public class Order {
 	private LocalDate shipDate;
 	private ArrayList orderLines;
 	private String status;
+	private Contact Customer;
 
 	public Order() {
 		orderLines = new ArrayList<>();
@@ -77,6 +78,10 @@ public class Order {
 
 	public String getStatus() {
 		return this.status;
+	}
+
+	public void addCustomer(Contact customer) {
+		this.Customer = customer;
 	}
 
 }

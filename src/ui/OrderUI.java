@@ -22,7 +22,7 @@ public class OrderUI {
 	}
 
 	public void addCustomer() {
-
+		orderCtrl.addCustomer();
 	}
 
 	public void completeOrder() {
