@@ -8,11 +8,13 @@ public class Product {
 	private String productNo, productDescription;
 	private Size size;
 	private ArrayList stockLines;
+	private int idProduct;
 
-	public Product(String productNo, String productDescription, Size size) {
+	public Product(String productNo, String productDescription, Size size, int idProduct) {
 		this.productNo = productNo;
 		this.productDescription = productDescription;
 		this.size = size;
+		this.idProduct = idProduct;
 		this.stockLines = new ArrayList<>();
 	}
 
@@ -30,6 +32,14 @@ public class Product {
 	public String toString() {
 		return "Order [prodNo=" + productNo + ", product description=" + productDescription + ", size="
 				+ size.getSizeDesc();
+	}
+
+	public int getIdProduct() {
+		return idProduct;
+	}
+
+	public Size getSize() {
+		return this.size;
 	}
 
 }

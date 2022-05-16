@@ -6,6 +6,7 @@ import java.util.List;
 
 import model.Order;
 import model.OrderLine;
+import model.Size;
 
 public class OrderLineDB implements OrderLineDBIF {
 
@@ -22,22 +23,13 @@ public class OrderLineDB implements OrderLineDBIF {
 	}
 
 	// i 0 = idOrder, i 1 = idProduct, i 2 = idSize
-	public void commitOrderLines(Order order, List<Integer> idSQL) {
-		List<OrderLine> tempList = order.getOrderLines();
-		try {
-			for (int i = 0; i < tempList.size(); i++) {
-				OrderLine ol = tempList.get(i);
-				commitOrderLinesPS.setInt(1, ol.getQuantity());
-				commitOrderLinesPS.setInt(2, idSQL.get(0));
-				commitOrderLinesPS.setInt(3, idSQL.get(1));
-				commitOrderLinesPS.setInt(4, idSQL.get(2));
-				commitOrderLinesPS.execute();
+	public void commitOrderLine(OrderLine orderLine, int idOrder, int idProduct, int idSize) throws SQLException {
+		commitOrderLinesPS.setInt(1, orderLine.getQuantity());
+		commitOrderLinesPS.setInt(2, idOrder);
+		commitOrderLinesPS.setInt(3, idProduct);
+		commitOrderLinesPS.setInt(4, idSize);
+		commitOrderLinesPS.execute();
 
-			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 
 }

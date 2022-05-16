@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import model.Order;
+import model.OrderLine;
 import model.Product;
 import model.StockLine;
 
@@ -32,7 +33,8 @@ public class OrderDB implements OrderDBIF {
 		orderLineDB = new OrderLineDB();
 		try {
 			findAllOrders = DBConnection.getInstance().getConnection().prepareStatement(findAllOrdersQ);
-			commitOrderPS = DBConnection.getInstance().getConnection().prepareStatement(COMMIT_ORDER);
+			commitOrderPS = DBConnection.getInstance().getConnection().prepareStatement(COMMIT_ORDER,
+					PreparedStatement.RETURN_GENERATED_KEYS);
 		} catch (SQLException e) {
 			throw new DataAccessException(e, "Could not prepare statements");
 		}
@@ -72,9 +74,8 @@ public class OrderDB implements OrderDBIF {
 
 	}
 
-	public Order commitOrder(Order order) throws SQLException {
-
-		List<Integer> tempList = new ArrayList<>();
+	public Order commitOrder(Order order) throws SQLException, DataAccessException {
+// to do product skal husk id når det blive oprettet. ol skal laves en enkel ad gang i olDB
 		try {
 			DBConnection.getInstance().getConnection().setAutoCommit(false);
 			commitOrderPS.setString(1, order.getOrderNo());
@@ -84,11 +85,12 @@ public class OrderDB implements OrderDBIF {
 			commitOrderPS.setInt(5, order.getInvoiceNo());
 			commitOrderPS.setInt(6, order.getContact().getIdContact());
 			commitOrderPS.setInt(7, 1);
-			ResultSet rs = commitOrderPS.executeQuery();
-			tempList.add(rs.getInt("idOrder"));
-			tempList.add(rs.getInt("idProduct"));
-			tempList.add(rs.getInt("idSize"));
-			orderLineDB.commitOrderLines(order, tempList);
+			int idOrder = DBConnection.getInstance().executeInsertWithIdentity(commitOrderPS);
+			for (int i = 0; i < order.getOrderLines().size(); i++) {
+				OrderLine ol = (OrderLine) order.getOrderLines().get(i);
+				Product p = ol.getProduct();
+				orderLineDB.commitOrderLine(ol, idOrder, p.getIdProduct(), p.getSize().getIdSize());
+			}
 			DBConnection.getInstance().getConnection().commit();
 		} catch (SQLException e) {
 			if (DBConnection.getInstance().getConnection() != null) {

@@ -10,7 +10,7 @@ import model.Size;
 import model.StockLine;
 
 public class ProductDB implements ProductDBIF {
-	private static final String FIND_PRODUCT = "SELECT DISTINCT Product.[idProduct], [sizeDesc], [prodNo], [prodDesc] from Product "
+	private static final String FIND_PRODUCT = "SELECT DISTINCT Product.[idProduct], [sizeDesc], Size.[idSize], [prodNo], [prodDesc] from Product "
 			+ "LEFT JOIN Size " + "ON Size.idSize = Product.idSize " + "INNER JOIN ProductStockLine "
 			+ "ON ProductStockLine.idProduct = Product.idProduct" + " INNER JOIN StockLine "
 			+ "ON ProductStockLine.idStockLine = StockLine.idStockLine" + " WHERE prodNo = ? and sizeDesc = ?  ";
@@ -45,8 +45,8 @@ public class ProductDB implements ProductDBIF {
 	}
 
 	private Product buildProduct(ResultSet rs) throws SQLException {
-		Size s = new Size(rs.getString("sizeDesc"));
-		Product p = new Product(rs.getString("prodNo"), rs.getString("prodDesc"), s);
+		Size s = new Size(rs.getString("sizeDesc"), rs.getInt("idSize"));
+		Product p = new Product(rs.getString("prodNo"), rs.getString("prodDesc"), s, rs.getInt("idProduct"));
 
 		return p;
 

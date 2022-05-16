@@ -163,13 +163,7 @@ public class AppWindow extends JFrame {
 	}
 
 	protected void addItem() throws SQLException {
-		Size s = new Size(comboBoxSize.getActionCommand());
-		if (checkInt() != false) {
-			int x = Integer.parseInt(textQty.getText());
-			oUI.addProduct(txtSearchForProduct.getText(), x, s);
-		} else {
-			System.out.println("The input in Quantity must be a number");
-		}
+		// der skal laves en create all funktion for item, og derefter skal der  kunne vælges derfra
 
 	}
 

@@ -15,7 +15,7 @@ public class TryMe {
 
 		OrderUI orderUI = new OrderUI();
 		orderUI.registerOrder();
-		Size s = new Size("Large");
+		Size s = new Size("Large", 3);
 		orderUI.addProduct("115", 5, s);
 		// Tests the disconnect from the DB
 		DBConnection.getInstance().disconnect();
