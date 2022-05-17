@@ -40,11 +40,9 @@ public class StockLineDB implements StockLineDBIF {
 		rs.close();
 		for (int i = 0; i < tempList.size(); i++) {
 			int id = tempList.get(i);
-			System.out.println(id);
 			StockLine sl = createStockLine(id);
 			ListSL.add(sl);
 		}
-		System.out.println(ListSL.get(1).getQtyAtLoc());
 		return ListSL;
 	}
 

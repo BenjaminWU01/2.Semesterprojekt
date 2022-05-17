@@ -3,6 +3,7 @@ package db;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import model.Product;
@@ -14,14 +15,19 @@ public class ProductDB implements ProductDBIF {
 			+ "LEFT JOIN Size " + "ON Size.idSize = Product.idSize " + "INNER JOIN ProductStockLine "
 			+ "ON ProductStockLine.idProduct = Product.idProduct" + " INNER JOIN StockLine "
 			+ "ON ProductStockLine.idStockLine = StockLine.idStockLine" + " WHERE prodNo = ? and sizeDesc = ?  ";
+	private static final String GET_ALL_PRODUCT = "SELECT DISTINCT Product.[idProduct], [sizeDesc], Size.[idSize], [prodNo], [prodDesc] from Product INNER JOIN Size ON Product.idSize = Size.idSize " + "INNER JOIN ProductStockLine "
+			+ "ON ProductStockLine.idProduct = Product.idProduct" + " INNER JOIN StockLine "
+			+ "ON ProductStockLine.idStockLine = StockLine.idStockLine";
 
 	private PreparedStatement findProductPS;
+	private PreparedStatement getAllProductPS;
 	private StockLineDBIF stockLineDB;
 
 	public ProductDB() {
 		stockLineDB = new StockLineDB();
 		try {
 			findProductPS = DBConnection.getInstance().getConnection().prepareStatement(FIND_PRODUCT);
+			getAllProductPS = DBConnection.getInstance().getConnection().prepareStatement(GET_ALL_PRODUCT);
 		} catch (SQLException e) {
 		}
 	}
@@ -60,6 +66,28 @@ public class ProductDB implements ProductDBIF {
 
 	public void updateStockLine(Product product) {
 
+	}
+	
+	public ArrayList buildAllProduct() throws SQLException{
+		ArrayList<Product> product = new ArrayList();
+		try {
+			ResultSet rs = getAllProductPS.executeQuery();
+			while(rs.next()) {
+				int x = 0;
+				product.add(buildProduct(rs));
+				stockLineDB.getStockLines(product.get(x).getIdProduct());
+				x++;
+			}
+			for(int i = 0; i < product.size(); i++) {
+				System.out.println(product.get(i).toString());
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return product;
+		
 	}
 
 }

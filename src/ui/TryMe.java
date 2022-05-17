@@ -4,6 +4,7 @@ import java.sql.SQLException;
 
 import db.DBConnection;
 import db.DataAccessException;
+import db.ProductDB;
 import model.Size;
 
 public class TryMe {
@@ -12,13 +13,13 @@ public class TryMe {
 
 		// Tests out DBConnection and prints out ConnectionId
 		System.out.println(DBConnection.getInstance().getConnection());
-
-		OrderUI orderUI = new OrderUI();
-		orderUI.registerOrder();
-		Size s = new Size("Large", 3);
-		orderUI.addProduct("115", 5, s);
+		
+		ProductDB productdb = new ProductDB();
+		productdb.buildAllProduct();
+		
 		// Tests the disconnect from the DB
 		DBConnection.getInstance().disconnect();
+
 	}
 
 	// Test method, drops tables, and builds new
