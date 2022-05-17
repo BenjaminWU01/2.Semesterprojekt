@@ -6,29 +6,33 @@ import java.util.List;
 
 import model.Order;
 import model.OrderLine;
+import model.Product;
 import model.Size;
 
 public class OrderLineDB implements OrderLineDBIF {
 
-	private static final String COMMIT_ORDERLINES = "INSERT INTO OrderLine VALUES?, ?, ?, ?";
+	private static final String COMMIT_ORDERLINE = "INSERT INTO OrderLine VALUES?, ?, ?, ?";
 
-	private PreparedStatement commitOrderLinesPS;
+	private PreparedStatement commitOrderLinePS;
 
 	public OrderLineDB() {
 		try {
-			commitOrderLinesPS = DBConnection.getInstance().getConnection().prepareStatement(COMMIT_ORDERLINES);
+			commitOrderLinePS = DBConnection.getInstance().getConnection().prepareStatement(COMMIT_ORDERLINE);
 		} catch (SQLException e) {
 		}
 
 	}
 
 	// i 0 = idOrder, i 1 = idProduct, i 2 = idSize
-	public void commitOrderLine(OrderLine orderLine, int idOrder, int idProduct, int idSize) throws SQLException {
-		commitOrderLinesPS.setInt(1, orderLine.getQuantity());
-		commitOrderLinesPS.setInt(2, idOrder);
-		commitOrderLinesPS.setInt(3, idProduct);
-		commitOrderLinesPS.setInt(4, idSize);
-		commitOrderLinesPS.execute();
+	public void commitOrderLine(OrderLine orderLine, int idOrder) throws SQLException {
+
+		Product p = orderLine.getProduct();
+
+		commitOrderLinePS.setInt(1, orderLine.getQuantity());
+		commitOrderLinePS.setInt(2, idOrder);
+		commitOrderLinePS.setInt(3, p.getIdProduct());
+		commitOrderLinePS.setInt(4, p.getSize().getIdSize());
+		commitOrderLinePS.execute();
 
 	}
 

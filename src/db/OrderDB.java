@@ -75,7 +75,6 @@ public class OrderDB implements OrderDBIF {
 	}
 
 	public Order commitOrder(Order order) throws SQLException, DataAccessException {
-// to do product skal husk id når det blive oprettet. ol skal laves en enkel ad gang i olDB
 		try {
 			DBConnection.getInstance().getConnection().setAutoCommit(false);
 			commitOrderPS.setString(1, order.getOrderNo());
@@ -88,8 +87,7 @@ public class OrderDB implements OrderDBIF {
 			int idOrder = DBConnection.getInstance().executeInsertWithIdentity(commitOrderPS);
 			for (int i = 0; i < order.getOrderLines().size(); i++) {
 				OrderLine ol = (OrderLine) order.getOrderLines().get(i);
-				Product p = ol.getProduct();
-				orderLineDB.commitOrderLine(ol, idOrder, p.getIdProduct(), p.getSize().getIdSize());
+				orderLineDB.commitOrderLine(ol, idOrder);
 			}
 			DBConnection.getInstance().getConnection().commit();
 		} catch (SQLException e) {

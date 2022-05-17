@@ -12,9 +12,9 @@ public class Product {
 
 	public Product(String productNo, String productDescription, Size size, int idProduct) {
 		this.productNo = productNo;
-		this.productDescription = productDescription;
 		this.size = size;
 		this.idProduct = idProduct;
+		this.productDescription = productDescription;
 		this.stockLines = new ArrayList<>();
 	}
 
@@ -40,6 +40,10 @@ public class Product {
 
 	public Size getSize() {
 		return this.size;
+	}
+
+	public String getProdNo() {
+		return this.productNo;
 	}
 
 }

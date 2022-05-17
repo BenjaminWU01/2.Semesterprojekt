@@ -9,5 +9,5 @@ import model.Size;
 
 public interface OrderLineDBIF {
 
-	public void commitOrderLine(OrderLine orderLine, int idOrder, int idProduct, int idSize) throws SQLException;
+	public void commitOrderLine(OrderLine orderLine, int idOrder) throws SQLException;
 }

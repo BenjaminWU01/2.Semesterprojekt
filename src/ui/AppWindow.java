@@ -163,7 +163,8 @@ public class AppWindow extends JFrame {
 	}
 
 	protected void addItem() throws SQLException {
-		// der skal laves en create all funktion for item, og derefter skal der  kunne vælges derfra
+		// der skal laves en create all funktion for item, og derefter skal der kunne
+		// vælges derfra
 
 	}
 
