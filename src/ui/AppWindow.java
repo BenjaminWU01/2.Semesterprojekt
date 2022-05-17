@@ -65,7 +65,7 @@ public class AppWindow extends JFrame {
 	 */
 	public AppWindow() throws DataAccessException {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 1200, 800);
+		setBounds(100, 100, 1165, 788);
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(112, 128, 144));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -95,10 +95,13 @@ public class AppWindow extends JFrame {
 
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBackground(new Color(169, 169, 169));
-		scrollPane.setBounds(513, 157, 434, 446);
+		scrollPane.setBounds(513, 157, 544, 449);
 		contentPane.add(scrollPane);
 
-		table = new JTable();
+		
+		String columnNames [] = {"Description", "Product No", "Quantity ordered", "In stocke"};
+		String data [][] = new String [26][4];
+		table = new JTable(data, columnNames);
 		scrollPane.setViewportView(table);
 
 		btnNewButton_1 = new JButton("Add");
