@@ -10,6 +10,7 @@ import javax.swing.border.EmptyBorder;
 import controller.ProductCtrl;
 import db.DataAccessException;
 import model.Order;
+import model.OrderLine;
 import model.Product;
 import model.Size;
 
@@ -49,6 +50,9 @@ public class AppWindow extends JFrame {
 	private JComboBox comboBoxSize;
 	private ProductCtrl pc;
 	private List<Product> prod;
+	
+	String columnNames [] = {"Description", "Product No", "Quantity ordered"};
+	String data [][] = new String [26][3];
 
 	/**
 	 * Launch the application.
@@ -107,11 +111,11 @@ public class AppWindow extends JFrame {
 		contentPane.add(scrollPane);
 
 		
-		String columnNames [] = {"Description", "Product No", "Quantity ordered", "In stocke"};
-		String data [][] = new String [26][4];
+		
 		table = new JTable(data, columnNames);
 		scrollPane.setViewportView(table);
-
+		
+		
 		btnNewButton_1 = new JButton("Add");
 		btnNewButton_1.addMouseListener(new MouseAdapter() {
 			@Override
@@ -175,7 +179,7 @@ public class AppWindow extends JFrame {
 				findItem();
 			}
 		});
-		btnSearch.setBounds(748, 83, 96, 53);
+		btnSearch.setBounds(758, 88, 108, 43);
 		contentPane.add(btnSearch);
 
 		init();
@@ -221,12 +225,27 @@ public class AppWindow extends JFrame {
 		}
 		checkInt();
 		int qty = Integer.parseInt(textQty.getText());
-		oUI.addProduct(prodNo, qty, s);
-		//System.out.println(prodNo + qty + s.getSizeDesc());
+		Order order = oUI.addProduct(prodNo, qty, s);
+		updateTable(order);
 		
 		
 		
 		
+	}
+	
+	public void updateTable(Order order) {
+		
+		List <OrderLine> orderlines = new ArrayList<>();
+		for(int i = 0; i < orderlines.size(); i++) {
+			
+			
+			data[i][0] = orderlines.get(i).getProduct().getProductDescription();
+			data[i][1] = orderlines.get(i).getProduct().getProdNo();
+			data[i][2] = Integer.toString(orderlines.get(i).getQuantity());
+			
+			
+		}
+		table = new JTable(data, columnNames);
 	}
 
 	public boolean checkInt() {

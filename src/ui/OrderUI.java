@@ -19,8 +19,9 @@ public class OrderUI {
 		order = orderCtrl.createOrder();
 	}
 
-	public void addProduct(String prodNo, int quantity, Size size) throws SQLException {
-		orderCtrl.addProduct(prodNo, quantity, size);
+	public Order addProduct(String prodNo, int quantity, Size size) throws SQLException {
+		return orderCtrl.addProduct(prodNo, quantity, size);
+		
 	}
 
 	public void addCustomer() {
