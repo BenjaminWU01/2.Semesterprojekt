@@ -48,6 +48,7 @@ public class AppWindow extends JFrame {
 	private JTextField textQty;
 	private JComboBox comboBoxSize;
 	private ProductCtrl pc;
+	private List<Product> prod;
 
 	/**
 	 * Launch the application.
@@ -166,26 +167,62 @@ public class AppWindow extends JFrame {
 		comboBoxSize.setModel(new DefaultComboBoxModel());
 		comboBoxSize.setBounds(314, 170, 108, 21);
 		contentPane.add(comboBoxSize);
+		
+		JButton btnSearch = new JButton("Search");
+		btnSearch.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				findItem();
+			}
+		});
+		btnSearch.setBounds(748, 83, 96, 53);
+		contentPane.add(btnSearch);
 
+		init();
+	}
+
+	public void init() throws DataAccessException {
+		pc = new ProductCtrl();
 		oUI = new OrderUI();
 		oUI.registerOrder();
 		openWindow();
 	}
-
-
 	protected void findItem() {
-
-		List<Product> prod = pc.findProduct(txtSearchForProduct.getText().trim());
-		ArrayList<String> sizes = new ArrayList<>();
+		
+		
+	    prod = pc.findProduct(txtSearchForProduct.getText().trim());
+		List<String> sizes = new ArrayList<>();
 		for(Product product: prod) {
 			sizes.add(product.getSize().getSizeDesc());	
 		}
 		
-		comboBoxSize.setModel((ComboBoxModel) sizes);
+		String[] sz  = new String[sizes.size()];
+		for(int i = 0; i < sizes.size(); i++) {
+			sz[i] = sizes.get(i);
+		}
+		
+		comboBoxSize.setModel(new DefaultComboBoxModel(sz));
 		
 	}
 	
 	protected void addItem() throws SQLException{
+		String prodNo = txtSearchForProduct.getText().trim();
+		boolean found = false;
+		int i = 0;
+		Size s = null;
+		while(!found || i < prod.size()) {
+			
+			if(prod.get(i).getSize().getSizeDesc().equals(comboBoxSize.getSelectedItem())) {
+				s = prod.get(i).getSize();
+				found = true;
+			}
+			i++;
+			
+		}
+		checkInt();
+		int qty = Integer.parseInt(textQty.getText());
+		oUI.addProduct(prodNo, qty, s);
+		//System.out.println(prodNo + qty + s.getSizeDesc());
 		
 		
 		

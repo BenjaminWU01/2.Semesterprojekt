@@ -28,8 +28,10 @@ public class ProductCtrl {
 	}
 
 	public List<Product> findProduct(String prodNo) {
+		
+		
 		List<Product> products = new ArrayList<>();
-
+		searchedProduct = (ArrayList<Product>) productDB.buildAllProduct();
 		for (int i = 0; i < searchedProduct.size(); i++) {
 
 			if (prodNo.equals(searchedProduct.get(i).getProdNo())) {

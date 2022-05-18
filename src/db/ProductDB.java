@@ -68,7 +68,7 @@ public class ProductDB implements ProductDBIF {
 
 	}
 
-	public ArrayList buildAllProduct() throws SQLException {
+	public ArrayList<Product> buildAllProduct() {
 
 		ArrayList<Product> product = new ArrayList();
 		try {

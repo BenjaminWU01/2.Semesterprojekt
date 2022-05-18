@@ -16,4 +16,6 @@ public interface ProductDBIF {
 
 	public void updateStockLine(Product product);
 
+	public List<Product> buildAllProduct();
+
 }
