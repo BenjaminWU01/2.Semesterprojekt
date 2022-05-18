@@ -7,7 +7,10 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import controller.ProductCtrl;
 import db.DataAccessException;
+import model.Order;
+import model.Product;
 import model.Size;
 
 import javax.swing.JTextField;
@@ -19,6 +22,8 @@ import java.awt.Color;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JComboBox;
 import javax.swing.JScrollPane;
@@ -26,6 +31,7 @@ import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.JSpinner;
 import javax.swing.SwingConstants;
+import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 
 public class AppWindow extends JFrame {
@@ -41,6 +47,7 @@ public class AppWindow extends JFrame {
 	private OrderUI oUI;
 	private JTextField textQty;
 	private JComboBox comboBoxSize;
+	private ProductCtrl pc;
 
 	/**
 	 * Launch the application.
@@ -155,8 +162,8 @@ public class AppWindow extends JFrame {
 		lblSize.setBounds(365, 154, 60, 19);
 		contentPane.add(lblSize);
 
-		comboBoxSize = new JComboBox();
-		comboBoxSize.setModel(new DefaultComboBoxModel(new String[] { "Small", "Medium", "Large" }));
+		comboBoxSize = new JComboBox(); //Lav bagefter - SizeDesc + QtyAvailable
+		comboBoxSize.setModel(new DefaultComboBoxModel());
 		comboBoxSize.setBounds(314, 170, 108, 21);
 		contentPane.add(comboBoxSize);
 
@@ -165,10 +172,24 @@ public class AppWindow extends JFrame {
 		openWindow();
 	}
 
-	protected void addItem() throws SQLException {
-		// der skal laves en create all funktion for item, og derefter skal der kunne
-		// vælges derfra
 
+	protected void findItem() {
+
+		List<Product> prod = pc.findProduct(txtSearchForProduct.getText().trim());
+		ArrayList<String> sizes = new ArrayList<>();
+		for(Product product: prod) {
+			sizes.add(product.getSize().getSizeDesc());	
+		}
+		
+		comboBoxSize.setModel((ComboBoxModel) sizes);
+		
+	}
+	
+	protected void addItem() throws SQLException{
+		
+		
+		
+		
 	}
 
 	public boolean checkInt() {
