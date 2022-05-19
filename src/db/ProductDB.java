@@ -68,7 +68,7 @@ public class ProductDB implements ProductDBIF {
 
 	}
 
-	public ArrayList<Product> buildAllProduct() {
+	public List<Product> buildAllProduct() {
 
 		ArrayList<Product> product = new ArrayList();
 		try {
