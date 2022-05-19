@@ -2,6 +2,7 @@ package controller;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import db.*;
@@ -15,17 +16,28 @@ public class OrderCtrl {
 	private ProductCtrl productCtrl;
 	private Order order;
 	private UserSession userSession;
-	private OrderDBIF orderDB;
+	private OrderDB orderDB;
 
-	public OrderCtrl() throws DataAccessException {
-		userSession = userSession.getInstance();
+	public OrderCtrl() {
+		userSession = UserSession.getInstance();
 		productCtrl = new ProductCtrl();
-		orderDB = new OrderDB();
+		try {
+			orderDB = new OrderDB();
+		} catch (DataAccessException e) {
+			System.out.println("Error in OrderCtrl, in constructing OrderCtrl/orderDB.");
+			e.printStackTrace();
+		}
 	}
 
-	public List<Order> getOrders() throws DataAccessException {
-		OrderDB odb = new OrderDB();
-		return odb.getOrders();
+	public List<Order> getOrders() {
+		List<Order> list = new ArrayList<>();
+		try {
+			list = orderDB.getOrders();
+		} catch (DataAccessException e) {
+			System.out.println("Error in OrderCtrl, in getting all orders.");
+			e.printStackTrace();
+		}
+		return list;
 	}
 
 	public Order createOrder() {
@@ -38,9 +50,7 @@ public class OrderCtrl {
 		Product p = productCtrl.getProduct(prodNo, size);
 		OrderLine ol = new OrderLine(p, quantity);
 		order.addOrderLine(ol);
-
 		return order;
-
 	}
 
 	public Order addCustomer() {
@@ -51,16 +61,23 @@ public class OrderCtrl {
 
 	public Order completeOrder() {
 		return null;
-
 	}
 
-	public void processOldestOrder(String orderNo) throws DataAccessException, SQLException {
-		OrderDB odb = new OrderDB();
-		odb.processOldestOrder(orderNo);
+	public void updateOrderRunning(String orderNo) {
+		try {
+			orderDB.updateOrderRunning(orderNo);
+		} catch (DataAccessException e) {
+			System.out.println("Error in OrderCtrl, in updating order to running");
+			e.printStackTrace();
+		}
 	}
 
-	public void finishOrder(String orderNo) throws DataAccessException, SQLException {
-		OrderDB odb = new OrderDB();
-		odb.finishOrder(orderNo);
+	public void updateOrderFinished(String orderNo) {
+		try {
+			orderDB.updateOrderFinished(orderNo);
+		} catch (DataAccessException e) {
+			System.out.println("Error in OrderCtrl, in updating order to finished");
+			e.printStackTrace();
+		}
 	}
 }

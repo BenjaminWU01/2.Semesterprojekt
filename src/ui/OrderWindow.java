@@ -38,18 +38,12 @@ public class OrderWindow {
 	private static JButton b_0;
 	private static JButton b_1;
 
-	private static String[] columnNames = { "OrderNo", "Name", "Size", "Quantity", "Price" };
-	private static Object[][] data = {
-			{ "1234", "Højhæle", LocalDate.of(2001, 3, 15), Integer.valueOf(1), Float.valueOf(300) },
-			{ "2345", "Kjole", LocalDate.of(2003, 3, 26), Integer.valueOf(3), Float.valueOf(450) },
-			{ "4321", "T-shirt", LocalDate.of(1975, 9, 15), Integer.valueOf(5), Float.valueOf(200) } };
-
-	public static void main(String[] args) throws DataAccessException {
+	public static void main(String[] args) {
 
 		// Initiate the jframe components
 		f = new JFrame();
-		t_0 = new JTable(data, columnNames);
-		t_1 = new JTable(data, columnNames);
+		t_0 = new JTable(new DefaultTableModel(), null);
+		t_1 = new JTable(new DefaultTableModel(), null);
 		sp_0 = new JScrollPane(t_0);
 		sp_1 = new JScrollPane(t_1);
 		p_0 = new JPanel();
@@ -62,15 +56,8 @@ public class OrderWindow {
 		b_0.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
-				try {
-					processOldestOrder();
-				} catch (DataAccessException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
+
+				updateOrderRunning();
 			}
 		});
 		b_1 = new JButton("Finish order");
@@ -78,16 +65,8 @@ public class OrderWindow {
 			@Override
 			public void mousePressed(MouseEvent e) {
 				if (t_1.getSelectedRow() >= 0 && t_1.getSelectedColumn() >= 0) {
-					System.out.println(t_1.getValueAt(t_1.getSelectedRow(), 0).toString());
-					try {
-						finishOrder(t_1.getValueAt(t_1.getSelectedRow(), 0).toString());
-					} catch (DataAccessException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					} catch (SQLException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
+
+					updateOrderFinished(t_1.getValueAt(t_1.getSelectedRow(), 0).toString());
 				}
 			}
 		});
@@ -121,8 +100,8 @@ public class OrderWindow {
 		b_0.setPreferredSize(new Dimension(200, 25));
 		b_1.setPreferredSize(new Dimension(200, 25));
 		f.setSize(580, 1080);
-		
-		//Update lists on startup
+
+		// Update lists on startup
 		updateLists();
 
 		// List-updater-thread, updates from database every 5000ms
@@ -133,24 +112,20 @@ public class OrderWindow {
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
-				try {
-					updateLists();
-				} catch (DataAccessException e1) {
-					e1.printStackTrace();
-				}
+				updateLists();
 			}
 		}).start();
 
 	}
 
-	//Fetches all orders from the database
-	private static List<Order> getOrders() throws DataAccessException {
+	// Fetches all orders from the database
+	private static List<Order> getOrders() {
 		OrderCtrl oc = new OrderCtrl();
 		return oc.getOrders();
 	}
 
-	//Fetches data from the database and updates the lists
-	private static void updateLists() throws DataAccessException {
+	// Fetches data from the database and updates the lists
+	private static void updateLists() {
 		List<Order> list = getOrders();
 		List<Order> waitingList = new ArrayList<>();
 		List<Order> currentList = new ArrayList<>();
@@ -169,22 +144,22 @@ public class OrderWindow {
 		updateCurrentTable(currentList);
 	}
 
-	//Builds a single object from the ResultSet 
-	private static Order buildObject(ResultSet rs) throws SQLException {
-		Order o = new Order();
-		return o;
-	}
-
-	//Builds every object from the ResultSet
-	private static List<Order> buildObjects(ResultSet rs) throws SQLException {
-		List<Order> result = new ArrayList<>();
-		if (rs != null) {
-			while (rs.next()) {
-				result.add(buildObject(rs));
-			}
-		}
-		return result;
-	}
+//	// Builds a single object from the ResultSet
+//	private static Order buildObject(ResultSet rs) {
+//		Order o = new Order();
+//		return o;
+//	}
+//
+//	// Builds every object from the ResultSet
+//	private static List<Order> buildObjects(ResultSet rs) throws SQLException {
+//		List<Order> result = new ArrayList<>();
+//		if (rs != null) {
+//			while (rs.next()) {
+//				result.add(buildObject(rs));
+//			}
+//		}
+//		return result;
+//	}
 
 	// Updates the top table with the correct values from the DB
 	private static void updateWaitingTable(List<Order> list) {
@@ -220,7 +195,7 @@ public class OrderWindow {
 		t_1.setModel(dtm);
 	}
 
-	//Finds the oldest order based on Date, from the TABLE, not from DB
+	// Finds the oldest order based on Date, from the TABLE, not from DB
 	private static String findOldestOrder() {
 		TableModel checkModel = t_0.getModel();
 		LocalDate oldestOrderDate = LocalDate.now();
@@ -238,17 +213,17 @@ public class OrderWindow {
 		return orderNo;
 	}
 
-	//Moves the oldest orders status to running
-	private static void processOldestOrder() throws DataAccessException, SQLException {
+	// Updates the oldest orders status to running
+	private static void updateOrderRunning() {
 		OrderCtrl oc = new OrderCtrl();
-		oc.processOldestOrder(findOldestOrder());
+		oc.updateOrderRunning(findOldestOrder());
 		updateLists();
 	}
 
-	//
-	private static void finishOrder(String orderNo) throws DataAccessException, SQLException {
+	// Updates the selected orders status to finished
+	private static void updateOrderFinished(String orderNo) {
 		OrderCtrl oc = new OrderCtrl();
-		oc.finishOrder(orderNo);
+		oc.updateOrderFinished(orderNo);
 		updateLists();
 	}
 

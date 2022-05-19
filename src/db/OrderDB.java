@@ -18,13 +18,13 @@ public class OrderDB implements OrderDBIF {
 			+ "SELECT Orders.[idOrder], Product.[idProduct], Product.[idSize] FROM OrderS "
 			+ "INNER JOIN OrderLine ON Orders.idOrder = OrderLine.idOrder "
 			+ "INNER JOIN Product ON OrderLine.idProduct = Product.idProduct " + "WHERE Orders.idOrder = 1";
-	private static final String updateOrderToRunning = "UPDATE Orders SET idOrderStatus = 2 WHERE orderNo = ?";
-	private static final String updateOrderToFinished = "UPDATE Orders SET idOrderStatus = 3 WHERE orderNo = ?";
+	private static final String updateOrderRunningQ = "UPDATE Orders SET idOrderStatus = 2 WHERE orderNo = ?";
+	private static final String updateOrderFinishedQ = "UPDATE Orders SET idOrderStatus = 3 WHERE orderNo = ?";
 
 	private PreparedStatement findAllOrders;
 	private PreparedStatement commitOrderPS;
-	private PreparedStatement toRunning;
-	private PreparedStatement toFinished;
+	private PreparedStatement updateOrderRunning;
+	private PreparedStatement updateOrderFinished;
 	private OrderLineDBIF orderLineDB;
 
 	// Test, delete later
@@ -39,8 +39,8 @@ public class OrderDB implements OrderDBIF {
 			findAllOrders = DBConnection.getInstance().getConnection().prepareStatement(findAllOrdersQ);
 			commitOrderPS = DBConnection.getInstance().getConnection().prepareStatement(COMMIT_ORDER,
 					PreparedStatement.RETURN_GENERATED_KEYS);
-			toRunning = DBConnection.getInstance().getConnection().prepareStatement(updateOrderToRunning);
-			toFinished = DBConnection.getInstance().getConnection().prepareStatement(updateOrderToFinished);
+			updateOrderRunning = DBConnection.getInstance().getConnection().prepareStatement(updateOrderRunningQ);
+			updateOrderFinished = DBConnection.getInstance().getConnection().prepareStatement(updateOrderFinishedQ);
 		} catch (SQLException e) {
 			throw new DataAccessException(e, "Could not prepare statements");
 		}
@@ -75,18 +75,26 @@ public class OrderDB implements OrderDBIF {
 		return result;
 	}
 
-	public void processOldestOrder(String orderNo) throws SQLException, DataAccessException {
-		DBConnection.getInstance().getConnection().setAutoCommit(false);
-		toRunning.setString(1, orderNo);
-		toRunning.execute();
-		DBConnection.getInstance().getConnection().setAutoCommit(true);
+	public void updateOrderRunning(String orderNo) throws DataAccessException {
+		try {
+			DBConnection.getInstance().getConnection().setAutoCommit(false);
+			updateOrderRunning.setString(1, orderNo);
+			updateOrderRunning.execute();
+			DBConnection.getInstance().getConnection().setAutoCommit(true);
+		} catch (SQLException e1) {
+			throw new DataAccessException(e1, "Could not update order " + orderNo + "s status to running.");
+		}
 	}
-	
-	public void finishOrder(String orderNo) throws SQLException, DataAccessException{
-		DBConnection.getInstance().getConnection().setAutoCommit(false);
-		toFinished.setString(1, orderNo);
-		toFinished.execute();
-		DBConnection.getInstance().getConnection().setAutoCommit(true);
+
+	public void updateOrderFinished(String orderNo) throws DataAccessException {
+		try {
+			DBConnection.getInstance().getConnection().setAutoCommit(false);
+			updateOrderFinished.setString(1, orderNo);
+			updateOrderFinished.execute();
+			DBConnection.getInstance().getConnection().setAutoCommit(true);
+		} catch (SQLException e1) {
+			throw new DataAccessException(e1, "Could not update order " + orderNo + "s status to finished.");
+		}
 	}
 
 	public Order commitOrder(Order order) throws SQLException, DataAccessException {
