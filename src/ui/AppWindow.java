@@ -6,6 +6,7 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
 
 import controller.ProductCtrl;
 import db.DataAccessException;
@@ -51,8 +52,6 @@ public class AppWindow extends JFrame {
 	private ProductCtrl pc;
 	private List<Product> prod;
 	
-	String columnNames [] = {"Description", "Product No", "Quantity ordered"};
-	String data [][] = new String [26][3];
 
 	/**
 	 * Launch the application.
@@ -111,8 +110,11 @@ public class AppWindow extends JFrame {
 		contentPane.add(scrollPane);
 
 		
-		
-		table = new JTable(data, columnNames);
+		DefaultTableModel model = new DefaultTableModel();
+		table = new JTable(model);
+		model.addColumn("Description");
+		model.addColumn("Product No");
+		model.addColumn("Quantity ordered");
 		scrollPane.setViewportView(table);
 		
 		
@@ -226,26 +228,41 @@ public class AppWindow extends JFrame {
 		checkInt();
 		int qty = Integer.parseInt(textQty.getText());
 		Order order = oUI.addProduct(prodNo, qty, s);
-		updateTable(order);
+		updateTable();
 		
 		
 		
 		
 	}
 	
-	public void updateTable(Order order) {
+	public void updateTable() {
 		
 		List <OrderLine> orderlines = new ArrayList<>();
+		
 		for(int i = 0; i < orderlines.size(); i++) {
 			
 			
-			data[i][0] = orderlines.get(i).getProduct().getProductDescription();
-			data[i][1] = orderlines.get(i).getProduct().getProdNo();
-			data[i][2] = Integer.toString(orderlines.get(i).getQuantity());
-			
+			String desc = orderlines.get(i).getProduct().getProductDescription();
+			String proNo = orderlines.get(i).getProduct().getProdNo();
+			String ohNo = Integer.toString(orderlines.get(i).getQuantity());
+		
+		
+		
+		DefaultTableModel model = (DefaultTableModel) table.getModel();
+		
+		
+		model.addRow(new Object[]{desc,proNo,ohNo});
+		
+		
+		
+		
 			
 		}
-		table = new JTable(data, columnNames);
+			
+			
+			
+		//}
+		// = new JTable(data, columnNames);
 	}
 
 	public boolean checkInt() {
