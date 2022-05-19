@@ -141,7 +141,7 @@ public class AppWindow extends JFrame {
 		btnNewButton_2.setBorder(null);
 		btnNewButton_2.setBackground(Color.WHITE);
 		btnNewButton_2.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		btnNewButton_2.setBounds(236, 260, 186, 59);
+		btnNewButton_2.setBounds(236, 260, 179, 59);
 		contentPane.add(btnNewButton_2);
 
 		btnNewButton_3 = new JButton("Update");
@@ -155,7 +155,7 @@ public class AppWindow extends JFrame {
 		btnNewButton_4.setBorder(null);
 		btnNewButton_4.setBackground(Color.WHITE);
 		btnNewButton_4.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		btnNewButton_4.setBounds(236, 357, 186, 59);
+		btnNewButton_4.setBounds(236, 357, 179, 59);
 		contentPane.add(btnNewButton_4);
 
 		JLabel lblNewLabel = new JLabel("Create Order");
