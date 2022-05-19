@@ -64,7 +64,7 @@ public class AppWindow extends JFrame {
 					AppWindow frame = new AppWindow();
 					frame.setVisible(true);
 				} catch (Exception e) {
-					e.printStackTrace();
+					e.printStackTrace(); 
 				}
 			}
 		});
@@ -79,7 +79,7 @@ public class AppWindow extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1165, 788);
 		contentPane = new JPanel();
-		contentPane.setBackground(new Color(112, 128, 144));
+		contentPane.setBackground(new Color(51, 51, 51));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
@@ -97,7 +97,8 @@ public class AppWindow extends JFrame {
 		txtSearchForProduct.setColumns(10);
 
 		JButton btnNewButton = new JButton("Finish Order");
-		btnNewButton.setBackground(new Color(0, 204, 255));
+		btnNewButton.setBorder(null);
+		btnNewButton.setBackground(Color.WHITE);
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 			}
@@ -120,6 +121,8 @@ public class AppWindow extends JFrame {
 		
 		
 		btnNewButton_1 = new JButton("Add");
+		btnNewButton_1.setBorder(null);
+		btnNewButton_1.setBackground(Color.WHITE);
 		btnNewButton_1.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -132,40 +135,50 @@ public class AppWindow extends JFrame {
 			}
 		});
 		btnNewButton_1.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		btnNewButton_1.setBounds(34, 260, 171, 59);
+		btnNewButton_1.setBounds(34, 260, 179, 59);
 		contentPane.add(btnNewButton_1);
 
 		btnNewButton_2 = new JButton("Delete");
+		btnNewButton_2.setBorder(null);
+		btnNewButton_2.setBackground(Color.WHITE);
 		btnNewButton_2.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		btnNewButton_2.setBounds(222, 260, 200, 59);
+		btnNewButton_2.setBounds(236, 260, 179, 59);
 		contentPane.add(btnNewButton_2);
 
 		btnNewButton_3 = new JButton("Update");
+		btnNewButton_3.setBorder(null);
+		btnNewButton_3.setBackground(Color.WHITE);
 		btnNewButton_3.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		btnNewButton_3.setBounds(34, 357, 171, 59);
+		btnNewButton_3.setBounds(34, 357, 179, 59);
 		contentPane.add(btnNewButton_3);
 
 		btnNewButton_4 = new JButton("Clear order");
+		btnNewButton_4.setBorder(null);
+		btnNewButton_4.setBackground(Color.WHITE);
 		btnNewButton_4.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		btnNewButton_4.setBounds(222, 357, 200, 59);
+		btnNewButton_4.setBounds(236, 357, 179, 59);
 		contentPane.add(btnNewButton_4);
 
 		JLabel lblNewLabel = new JLabel("Create Order");
+		lblNewLabel.setForeground(Color.WHITE);
 		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 25));
 		lblNewLabel.setBounds(389, 29, 200, 43);
 		contentPane.add(lblNewLabel);
 
 		textQty = new JTextField();
+		textQty.setBorder(null);
 		textQty.setText("1");
 		textQty.setBounds(34, 171, 96, 19);
 		contentPane.add(textQty);
 		textQty.setColumns(10);
 
 		JLabel lblQty = new JLabel("Quantity");
+		lblQty.setForeground(Color.WHITE);
 		lblQty.setBounds(34, 157, 47, 15);
 		contentPane.add(lblQty);
 
 		JLabel lblSize = new JLabel("Size");
+		lblSize.setForeground(Color.WHITE);
 		lblSize.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblSize.setBounds(365, 154, 60, 19);
 		contentPane.add(lblSize);
@@ -176,6 +189,8 @@ public class AppWindow extends JFrame {
 		contentPane.add(comboBoxSize);
 		
 		JButton btnSearch = new JButton("Search");
+		btnSearch.setBorder(null);
+		btnSearch.setBackground(Color.WHITE);
 		btnSearch.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent e) {

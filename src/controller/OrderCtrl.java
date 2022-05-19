@@ -54,7 +54,13 @@ public class OrderCtrl {
 
 	}
 
-	public static void processOldestOrder(String orderNo) {
-		// OrderDB.processOldestOrder(orderNo);
+	public void processOldestOrder(String orderNo) throws DataAccessException, SQLException {
+		OrderDB odb = new OrderDB();
+		odb.processOldestOrder(orderNo);
+	}
+
+	public void finishOrder(String orderNo) throws DataAccessException, SQLException {
+		OrderDB odb = new OrderDB();
+		odb.finishOrder(orderNo);
 	}
 }
