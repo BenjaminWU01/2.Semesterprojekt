@@ -51,6 +51,7 @@ public class AppWindow extends JFrame {
 	private JComboBox comboBoxSize;
 	private ProductCtrl pc;
 	private List<Product> prod;
+	private Product currentProduct;
 	
 
 	/**
@@ -196,7 +197,7 @@ public class AppWindow extends JFrame {
 	protected void findItem() {
 		
 		
-	    prod = pc.findProduct(txtSearchForProduct.getText().trim());
+	    prod = pc.findProduct(txtSearchForProduct.getText().trim().toLowerCase());
 		List<String> sizes = new ArrayList<>();
 		for(Product product: prod) {
 			sizes.add(product.getSize().getSizeDesc());	
@@ -228,6 +229,7 @@ public class AppWindow extends JFrame {
 		checkInt();
 		int qty = Integer.parseInt(textQty.getText());
 		Order order = oUI.addProduct(prodNo, qty, s);
+		
 		updateTable();
 		
 		
@@ -237,33 +239,25 @@ public class AppWindow extends JFrame {
 	
 	public void updateTable() {
 		
-		List <OrderLine> orderlines = new ArrayList<>();
 		
-		for(int i = 0; i < orderlines.size(); i++) {
-			
-			
-			String desc = orderlines.get(i).getProduct().getProductDescription();
-			String proNo = orderlines.get(i).getProduct().getProdNo();
-			String ohNo = Integer.toString(orderlines.get(i).getQuantity());
+		Product currProd = prod.get(prod.size()-1);
 		
+		
+		String desc = currProd.getProductDescription();
+			System.out.println(desc);
+		String proNo = currProd.getProdNo();
+			System.out.println(proNo);
+		String qty = textQty.getText();
+			System.out.println(qty);
 		
 		
 		DefaultTableModel model = (DefaultTableModel) table.getModel();
 		
 		
-		model.addRow(new Object[]{desc,proNo,ohNo});
+		model.addRow(new Object[]{desc,proNo,qty});
 		
-		
-		
-		
-			
 		}
-			
-			
-			
-		//}
-		// = new JTable(data, columnNames);
-	}
+	
 
 	public boolean checkInt() {
 		boolean result = false;
