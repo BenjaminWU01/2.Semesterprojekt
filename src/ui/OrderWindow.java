@@ -62,7 +62,15 @@ public class OrderWindow {
 		b_0.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
-				processOldestOrder();
+				try {
+					processOldestOrder();
+				} catch (DataAccessException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
 		});
 		b_1 = new JButton("Finish order");
@@ -71,7 +79,15 @@ public class OrderWindow {
 			public void mousePressed(MouseEvent e) {
 				if (t_1.getSelectedRow() >= 0 && t_1.getSelectedColumn() >= 0) {
 					System.out.println(t_1.getValueAt(t_1.getSelectedRow(), 0).toString());
-					finishOrder(t_1.getValueAt(t_1.getSelectedRow(), 0).toString());
+					try {
+						finishOrder(t_1.getValueAt(t_1.getSelectedRow(), 0).toString());
+					} catch (DataAccessException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					} catch (SQLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 				}
 			}
 		});
@@ -105,6 +121,9 @@ public class OrderWindow {
 		b_0.setPreferredSize(new Dimension(200, 25));
 		b_1.setPreferredSize(new Dimension(200, 25));
 		f.setSize(580, 1080);
+		
+		//Update lists on startup
+		updateLists();
 
 		// List-updater-thread, updates from database every 5000ms
 		new Thread(() -> {
@@ -220,13 +239,17 @@ public class OrderWindow {
 	}
 
 	//Moves the oldest orders status to running
-	private static void processOldestOrder() {
-		OrderCtrl.processOldestOrder(findOldestOrder());
+	private static void processOldestOrder() throws DataAccessException, SQLException {
+		OrderCtrl oc = new OrderCtrl();
+		oc.processOldestOrder(findOldestOrder());
+		updateLists();
 	}
 
 	//
-	private static void finishOrder(String orderNo) {
-
+	private static void finishOrder(String orderNo) throws DataAccessException, SQLException {
+		OrderCtrl oc = new OrderCtrl();
+		oc.finishOrder(orderNo);
+		updateLists();
 	}
 
 }
