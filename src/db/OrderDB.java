@@ -97,7 +97,7 @@ public class OrderDB implements OrderDBIF {
 		}
 	}
 
-	public Order commitOrder(Order order) throws SQLException, DataAccessException {
+	public Order commitOrder(Order order) throws DataAccessException {
 		try {
 			DBConnection.getInstance().getConnection().setAutoCommit(false);
 			commitOrderPS.setString(1, order.getOrderNo());
@@ -125,7 +125,12 @@ public class OrderDB implements OrderDBIF {
 			}
 
 		}
-		DBConnection.getInstance().getConnection().setAutoCommit(true);
+		try {
+			DBConnection.getInstance().getConnection().setAutoCommit(true);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return order;
 	}
 }
