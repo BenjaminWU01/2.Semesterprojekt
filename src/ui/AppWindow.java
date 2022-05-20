@@ -112,7 +112,14 @@ public class AppWindow extends JFrame {
 		contentPane.add(scrollPane);
 
 		
-		DefaultTableModel model = new DefaultTableModel();
+		DefaultTableModel model = new DefaultTableModel(){
+
+		    @Override
+		    public boolean isCellEditable(int row, int column) {
+		       //all cells false
+		       return false;
+		    }
+		};
 		table = new JTable(model);
 		model.addColumn("Description");
 		model.addColumn("Product No");

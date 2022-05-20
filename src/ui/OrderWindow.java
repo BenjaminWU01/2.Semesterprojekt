@@ -124,7 +124,7 @@ public class OrderWindow {
 		return oc.getOrders();
 	}
 
-	// Fetches data from the database and updates the lists
+	// Fetches data from getOrders() and updates the lists
 	private static void updateLists() {
 		List<Order> list = getOrders();
 		List<Order> waitingList = new ArrayList<>();
