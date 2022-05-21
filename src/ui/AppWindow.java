@@ -8,6 +8,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
+import controller.OrderCtrl;
 import controller.ProductCtrl;
 import db.DataAccessException;
 import model.Order;
@@ -21,6 +22,7 @@ import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.SQLException;
@@ -77,7 +79,9 @@ public class AppWindow extends JFrame {
 	 */
 	public AppWindow() throws DataAccessException {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 1165, 788);
+//		setBounds(100, 100, 1165, 788);
+		setLocation(0, 0);
+		setSize(new Dimension(960, 1080));
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(51, 51, 51));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -101,6 +105,7 @@ public class AppWindow extends JFrame {
 		btnNewButton.setBackground(Color.WHITE);
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				completeOrder();
 			}
 		});
 		btnNewButton.setBounds(776, 631, 171, 75);
@@ -294,6 +299,11 @@ public class AppWindow extends JFrame {
 	}
 
 	public void openWindow() throws DataAccessException {
-		ow.main(null);
+		ow = new OrderWindow();
+	}
+	
+	public Order completeOrder() {
+		Order o = oUI.completeOrder();
+		return o;
 	}
 }

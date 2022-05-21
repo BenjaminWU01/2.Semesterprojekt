@@ -4,6 +4,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,10 +15,10 @@ import model.StockLine;
 
 public class OrderDB implements OrderDBIF {
 	private static final String findAllOrdersQ = "select * from Orders LEFT JOIN OrderStatus on Orders.idOrderStatus = OrderStatus.idOrderStatus;";
-	private static final String COMMIT_ORDER = "INSERT INTO Orders VALUES(?, ?, ?, ?, ? ?, ? "
-			+ "SELECT Orders.[idOrder], Product.[idProduct], Product.[idSize] FROM OrderS "
-			+ "INNER JOIN OrderLine ON Orders.idOrder = OrderLine.idOrder "
-			+ "INNER JOIN Product ON OrderLine.idProduct = Product.idProduct " + "WHERE Orders.idOrder = 1";
+	private static final String COMMIT_ORDER = "INSERT INTO Orders VALUES(?, ?, ?, ?, ?, ?, ?) ";
+//			+ "SELECT Orders.[idOrder], Product.[idProduct], Product.[idSize] FROM OrderS "
+//			+ "INNER JOIN OrderLine ON Orders.idOrder = OrderLine.idOrder "
+//			+ "INNER JOIN Product ON OrderLine.idProduct = Product.idProduct " + "WHERE Orders.idOrder = 1";
 	private static final String updateOrderRunningQ = "UPDATE Orders SET idOrderStatus = 2 WHERE orderNo = ?";
 	private static final String updateOrderFinishedQ = "UPDATE Orders SET idOrderStatus = 3 WHERE orderNo = ?";
 
@@ -101,11 +102,13 @@ public class OrderDB implements OrderDBIF {
 		try {
 			DBConnection.getInstance().getConnection().setAutoCommit(false);
 			commitOrderPS.setString(1, order.getOrderNo());
-			commitOrderPS.setDate(2, Date.valueOf(order.getOrderDate()));
-			commitOrderPS.setDate(3, Date.valueOf(order.getShipDate()));
+			commitOrderPS.setDate(2, Date.valueOf(LocalDate.now()));
+			commitOrderPS.setDate(3, Date.valueOf(LocalDate.now()));
+//			commitOrderPS.setDate(3, Date.valueOf(order.getShipDate()));
 			commitOrderPS.setInt(4, order.getTrackingNo());
 			commitOrderPS.setInt(5, order.getInvoiceNo());
-			commitOrderPS.setInt(6, order.getContact().getIdContact());
+			commitOrderPS.setInt(6, 1);
+//			commitOrderPS.setInt(6, order.getContact().getIdContact());
 			commitOrderPS.setInt(7, 1);
 			int idOrder = DBConnection.getInstance().executeInsertWithIdentity(commitOrderPS);
 			for (int i = 0; i < order.getOrderLines().size(); i++) {

@@ -87,7 +87,7 @@ public class DBConnection {
 			if (res > 0) {
 				ResultSet rs = ps.getGeneratedKeys();
 				rs.next();
-				res = rs.getInt(1);
+				res = rs.getInt(0);
 			}
 		} catch (SQLException e) {
 			// e.printStackTrace();

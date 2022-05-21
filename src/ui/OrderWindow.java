@@ -38,8 +38,9 @@ public class OrderWindow {
 	private static JButton b_0;
 	private static JButton b_1;
 
-	public static void main(String[] args) {
-
+	// Constructor for the OrderWindow class
+	public OrderWindow() {
+		
 		// Initiate the jframe components
 		f = new JFrame();
 		t_0 = new JTable(new DefaultTableModel(), null);
@@ -51,7 +52,8 @@ public class OrderWindow {
 		l_0 = new JLabel("Waiting orders:");
 		l_1 = new JLabel("Current orders: ");
 		b_0 = new JButton("Begin order");
-
+		b_1 = new JButton("Finish order");
+		
 		// Action Listeners for buttons
 		b_0.addMouseListener(new MouseAdapter() {
 			@Override
@@ -60,7 +62,6 @@ public class OrderWindow {
 				updateOrderRunning();
 			}
 		});
-		b_1 = new JButton("Finish order");
 		b_1.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
@@ -143,23 +144,6 @@ public class OrderWindow {
 		updateWaitingTable(waitingList);
 		updateCurrentTable(currentList);
 	}
-
-//	// Builds a single object from the ResultSet
-//	private static Order buildObject(ResultSet rs) {
-//		Order o = new Order();
-//		return o;
-//	}
-//
-//	// Builds every object from the ResultSet
-//	private static List<Order> buildObjects(ResultSet rs) throws SQLException {
-//		List<Order> result = new ArrayList<>();
-//		if (rs != null) {
-//			while (rs.next()) {
-//				result.add(buildObject(rs));
-//			}
-//		}
-//		return result;
-//	}
 
 	// Updates the top table with the correct values from the DB
 	private static void updateWaitingTable(List<Order> list) {

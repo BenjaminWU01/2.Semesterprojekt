@@ -17,6 +17,7 @@ public class OrderCtrl {
 	private Order order;
 	private UserSession userSession;
 	private OrderDB orderDB;
+	
 
 	public OrderCtrl() {
 		userSession = UserSession.getInstance();
@@ -60,7 +61,14 @@ public class OrderCtrl {
 	}
 
 	public Order completeOrder() {
-		return null;
+		Order returnOrder = null;
+		try{
+			returnOrder = orderDB.commitOrder(order);
+		} catch (DataAccessException e) {
+			System.out.println("Error in OrderCtrl, in completing an order");
+			e.printStackTrace();
+		}
+		return returnOrder;
 	}
 
 	public void updateOrderRunning(String orderNo) {

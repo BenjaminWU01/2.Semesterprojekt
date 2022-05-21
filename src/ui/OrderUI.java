@@ -9,27 +9,27 @@ import model.Size;
 
 public class OrderUI {
 	private OrderCtrl orderCtrl;
-	private Order order;
 
 	public OrderUI() throws DataAccessException {
 		orderCtrl = new OrderCtrl();
 	}
 
 	public void registerOrder() {
-		order = orderCtrl.createOrder();
+		orderCtrl.createOrder();
 	}
 
 	public Order addProduct(String prodNo, int quantity, Size size) throws SQLException {
 		return orderCtrl.addProduct(prodNo, quantity, size);
-		
+
 	}
 
 	public void addCustomer() {
 		orderCtrl.addCustomer();
 	}
 
-	public void completeOrder() {
-
+	public Order completeOrder() {
+		Order o = orderCtrl.completeOrder();
+		return o;
 	}
 
 }
