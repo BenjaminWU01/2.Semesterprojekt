@@ -304,6 +304,7 @@ public class AppWindow extends JFrame {
 	
 	public Order completeOrder() {
 		Order o = oUI.completeOrder();
+		oUI.registerOrder();
 		return o;
 	}
 }

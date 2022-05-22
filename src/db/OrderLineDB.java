@@ -24,12 +24,12 @@ public class OrderLineDB implements OrderLineDBIF {
 	}
 
 	// i 0 = idOrder, i 1 = idProduct, i 2 = idSize
-	public void commitOrderLine(OrderLine orderLine, int idOrder) throws SQLException {
+	public void commitOrderLine(OrderLine orderLine, String idOrder) throws SQLException {
 
 		Product p = orderLine.getProduct();
 
 		commitOrderLinePS.setInt(1, orderLine.getQuantity());
-		commitOrderLinePS.setInt(2, idOrder);
+		commitOrderLinePS.setString(2, idOrder);
 		commitOrderLinePS.setInt(3, p.getIdProduct());
 		commitOrderLinePS.setInt(4, p.getSize().getIdSize());
 		commitOrderLinePS.execute();

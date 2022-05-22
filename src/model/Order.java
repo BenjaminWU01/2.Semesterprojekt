@@ -2,6 +2,7 @@ package model;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class Order {
 
@@ -16,7 +17,12 @@ public class Order {
 	private int contactId;
 
 	public Order() {
+		Random random = new Random();
 		orderLines = new ArrayList<>();
+		orderNo = "" + random.nextInt();
+		trackingNo = random.nextInt();
+		invoiceNo = random.nextInt();
+		orderDate = LocalDate.now();
 	}
 
 	public Order(String orderNo, LocalDate orderDate, int trackingNo, int invoiceNo, int contact, String status) {

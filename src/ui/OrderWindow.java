@@ -1,7 +1,6 @@
 package ui;
 
 import controller.*;
-import db.DataAccessException;
 import model.Order;
 
 import javax.swing.JButton;
@@ -14,8 +13,6 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
 import java.awt.Font;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;

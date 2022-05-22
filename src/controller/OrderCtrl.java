@@ -48,6 +48,7 @@ public class OrderCtrl {
 	}
 
 	public Order addProduct(String prodNo, int quantity, Size size) throws SQLException {
+		System.out.println("adding product " + prodNo);
 		Product p = productCtrl.getProduct(prodNo, size);
 		OrderLine ol = new OrderLine(p, quantity);
 		order.addOrderLine(ol);
@@ -62,6 +63,7 @@ public class OrderCtrl {
 
 	public Order completeOrder() {
 		Order returnOrder = null;
+		System.out.println(order);
 		try{
 			returnOrder = orderDB.commitOrder(order);
 		} catch (DataAccessException e) {

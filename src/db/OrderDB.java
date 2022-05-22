@@ -98,7 +98,7 @@ public class OrderDB implements OrderDBIF {
 		}
 	}
 
-	public Order commitOrder(Order order) throws DataAccessException {
+	public Order commitOrderIdentity(Order order) throws DataAccessException {
 		try {
 			DBConnection.getInstance().getConnection().setAutoCommit(false);
 			commitOrderPS.setString(1, order.getOrderNo());
@@ -113,7 +113,7 @@ public class OrderDB implements OrderDBIF {
 			int idOrder = DBConnection.getInstance().executeInsertWithIdentity(commitOrderPS);
 			for (int i = 0; i < order.getOrderLines().size(); i++) {
 				OrderLine ol = (OrderLine) order.getOrderLines().get(i);
-				orderLineDB.commitOrderLine(ol, idOrder);
+				orderLineDB.commitOrderLine(ol, order.getOrderNo());
 			}
 			DBConnection.getInstance().getConnection().commit();
 		} catch (SQLException e) {
@@ -133,6 +133,32 @@ public class OrderDB implements OrderDBIF {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+		return order;
+	}
+
+	public Order commitOrder(Order order) throws DataAccessException {
+		try {
+			DBConnection.getInstance().getConnection().setAutoCommit(false);
+			commitOrderPS.setString(1, order.getOrderNo());
+			commitOrderPS.setDate(2, Date.valueOf(order.getOrderDate()));
+			commitOrderPS.setDate(3, Date.valueOf(LocalDate.now()));
+//			commitOrderPS.setDate(3, Date.valueOf(order.getShipDate()));
+			commitOrderPS.setInt(4, order.getTrackingNo());
+			commitOrderPS.setInt(5, order.getInvoiceNo());
+			commitOrderPS.setInt(6, 1);
+//			commitOrderPS.setInt(6, order.getContact().getIdContact());
+			commitOrderPS.setInt(7, 1);
+			commitOrderPS.execute();
+//			for (int i = 0; i < order.getOrderLines().size(); i++) {
+//				OrderLine ol = (OrderLine) order.getOrderLines().get(i);
+//				orderLineDB.commitOrderLine(ol, order.getOrderNo());
+//			}
+			DBConnection.getInstance().getConnection().commit();
+
+		} catch (SQLException e) {
+			throw new DataAccessException(e, "Error in OrderDB, in commitOrder");
+
 		}
 		return order;
 	}
