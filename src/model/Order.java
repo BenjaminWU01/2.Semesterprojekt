@@ -18,7 +18,7 @@ public class Order {
 	public Order() {
 		orderLines = new ArrayList<OrderLine>();
 		Random random = new Random();
-		orderLines = new ArrayList<>();
+		//orderLines = new ArrayList<>();
 		orderNo = "" + random.nextInt();
 		trackingNo = random.nextInt();
 		invoiceNo = random.nextInt();
