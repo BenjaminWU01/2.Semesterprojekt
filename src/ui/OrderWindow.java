@@ -3,6 +3,7 @@ package ui;
 import controller.*;
 import model.Order;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -34,6 +35,7 @@ public class OrderWindow {
 	private static JLabel l_0;
 	private static JButton b_0;
 	private static JButton b_1;
+	private static BorderFactory bf;
 
 	// Constructor for the OrderWindow class
 	public OrderWindow() {
@@ -131,10 +133,8 @@ public class OrderWindow {
 			for (Order o : list) {
 				if (o.getStatus().contains("pending")) {
 					waitingList.add(o);
-					System.out.println("WaitingList + " + o);
 				} else if (o.getStatus().contains("running")) {
 					currentList.add(o);
-					System.out.println("CurrentList + " + o);
 				}
 			}
 		}

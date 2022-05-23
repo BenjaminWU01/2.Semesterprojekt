@@ -14,9 +14,9 @@ public class Order {
 	private ArrayList<OrderLine> orderLines;
 	private String status;
 	private Contact customer;
-	private int contactId;
 
 	public Order() {
+		orderLines = new ArrayList<OrderLine>();
 		Random random = new Random();
 		orderLines = new ArrayList<>();
 		orderNo = "" + random.nextInt();
@@ -25,13 +25,12 @@ public class Order {
 		orderDate = LocalDate.now();
 	}
 
-	public Order(String orderNo, LocalDate orderDate, int trackingNo, int invoiceNo, int contact, String status) {
-		orderLines = new ArrayList<>();
+	public Order(String orderNo, LocalDate orderDate, int trackingNo, int invoiceNo, String status) {
+		orderLines = new ArrayList<OrderLine>();
 		this.orderNo = orderNo;
 		this.orderDate = orderDate;
 		this.trackingNo = trackingNo;
 		this.invoiceNo = invoiceNo;
-		this.contactId = contact;
 		this.status = status;
 	}
 
@@ -75,7 +74,7 @@ public class Order {
 		this.shipDate = shipDate;
 	}
 
-	public ArrayList getOrderLines() {
+	public ArrayList<OrderLine> getOrderLines() {
 		return orderLines;
 	}
 
@@ -104,5 +103,4 @@ public class Order {
 	public Contact getContact() {
 		return this.customer;
 	}
-
 }

@@ -1,9 +1,9 @@
 package controller;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import db.DataAccessException;
 import db.ProductDB;
 import db.ProductDBIF;
 import model.Product;
@@ -14,34 +14,41 @@ public class ProductCtrl {
 	private ArrayList<Product> searchedProduct;
 
 	public ProductCtrl() {
-		productDB = new ProductDB();
+		try {
+			productDB = new ProductDB();
+		} catch (DataAccessException e) {
+			System.out.println("Error in ProductCtrl, in constructor");
+			e.printStackTrace();
+		}
 	}
 
-	public Product getProduct(String prodNo, Size size) throws SQLException {
-		Product product = productDB.getProduct(prodNo, size);
+	public Product getProduct(String prodNo, Size size) {
+		Product product = null;
+		try {
+			product = productDB.getProduct(prodNo, size);
+		} catch (DataAccessException e) {
+			System.out.println("Error in ProductCtrl, in getProduct()");
+			e.printStackTrace();
+		}
 		return product;
-
 	}
 
-	public void updateStockLine(Product p) {
-
-	}
-
+//	public void updateStockLine(Product p) {
+//
+//	}
 	public List<Product> findProduct(String prodNo) {
-		
-		
 		List<Product> products = new ArrayList<>();
-		searchedProduct = (ArrayList<Product>) productDB.buildAllProduct();
+		try {
+			searchedProduct = (ArrayList<Product>) productDB.buildAllProduct();
+		} catch (DataAccessException e) {
+			System.out.println("Error in ProductCtrl, in findProduct()");
+			e.printStackTrace();
+		}
 		for (int i = 0; i < searchedProduct.size(); i++) {
-
 			if (prodNo.equals(searchedProduct.get(i).getProdNo())) {
 				products.add(searchedProduct.get(i));
-
 			}
-
 		}
-
 		return products;
 	}
-
 }

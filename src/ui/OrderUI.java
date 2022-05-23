@@ -1,35 +1,33 @@
 package ui;
 
-import java.sql.SQLException;
-
 import controller.OrderCtrl;
-import db.DataAccessException;
-import model.Order;
 import model.Size;
 
 public class OrderUI {
 	private OrderCtrl orderCtrl;
 
-	public OrderUI() throws DataAccessException {
+	public OrderUI() {
 		orderCtrl = new OrderCtrl();
 	}
 
+	// Creates a new, empty Order object
 	public void registerOrder() {
 		orderCtrl.createOrder();
 	}
 
-	public Order addProduct(String prodNo, int quantity, Size size) throws SQLException {
-		return orderCtrl.addProduct(prodNo, quantity, size);
-
+	// Associates a Product to a new OrderLine object, and the OrderLine to the
+	// Order
+	public void addProduct(String prodNo, int quantity, Size size) {
+		orderCtrl.addProduct(prodNo, quantity, size);
 	}
 
+	// Associates a Contact object to the order
 	public void addCustomer() {
 		orderCtrl.addCustomer();
 	}
 
-	public Order completeOrder() {
-		Order o = orderCtrl.completeOrder();
-		return o;
+	// Creates and saves the Order in the DB
+	public void completeOrder() {
+		orderCtrl.completeOrder();
 	}
-
 }

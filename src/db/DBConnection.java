@@ -5,7 +5,6 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 import db.DBConnection;
 
@@ -30,7 +29,6 @@ public class DBConnection {
 					"Connection string was: " + connectionString.substring(0, connectionString.length() - 10) + "....");
 			e.printStackTrace();
 		}
-
 	}
 
 	// The get instance for generating the singleton, called by
@@ -79,18 +77,15 @@ public class DBConnection {
 	}
 
 	public int executeInsertWithIdentity(PreparedStatement ps) throws DataAccessException {
-		// requires perpared statement to be created with the additional argument
-		// PreparedStatement.RETURN_GENERATED_KEYS
 		int res = -1;
 		try {
 			res = ps.executeUpdate();
 			if (res > 0) {
 				ResultSet rs = ps.getGeneratedKeys();
 				rs.next();
-				res = rs.getInt(0);
+				res = rs.getInt(1);
 			}
 		} catch (SQLException e) {
-			// e.printStackTrace();
 			throw new DataAccessException(e, "Could not execute insert");
 		}
 		return res;

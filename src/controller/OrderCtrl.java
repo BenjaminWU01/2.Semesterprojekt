@@ -1,11 +1,10 @@
 package controller;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import db.*;
+import db.OrderDB;
+import db.DataAccessException;
 import model.Contact;
 import model.Order;
 import model.OrderLine;
@@ -17,7 +16,6 @@ public class OrderCtrl {
 	private Order order;
 	private UserSession userSession;
 	private OrderDB orderDB;
-	
 
 	public OrderCtrl() {
 		userSession = UserSession.getInstance();
@@ -25,7 +23,7 @@ public class OrderCtrl {
 		try {
 			orderDB = new OrderDB();
 		} catch (DataAccessException e) {
-			System.out.println("Error in OrderCtrl, in constructing OrderCtrl/orderDB.");
+			System.err.println("Error in OrderCtrl, in constructing OrderCtrl/orderDB.");
 			e.printStackTrace();
 		}
 	}
@@ -35,7 +33,7 @@ public class OrderCtrl {
 		try {
 			list = orderDB.getOrders();
 		} catch (DataAccessException e) {
-			System.out.println("Error in OrderCtrl, in getting all orders.");
+			System.err.println("Error in OrderCtrl, in getting all orders.");
 			e.printStackTrace();
 		}
 		return list;
@@ -47,8 +45,7 @@ public class OrderCtrl {
 		return order;
 	}
 
-	public Order addProduct(String prodNo, int quantity, Size size) throws SQLException {
-		System.out.println("adding product " + prodNo);
+	public Order addProduct(String prodNo, int quantity, Size size) {
 		Product p = productCtrl.getProduct(prodNo, size);
 		OrderLine ol = new OrderLine(p, quantity);
 		order.addOrderLine(ol);
@@ -57,17 +54,16 @@ public class OrderCtrl {
 
 	public Order addCustomer() {
 		Contact customer = userSession.getCustomer();
-//		order.addCustomer(customer);
+		order.addCustomer(customer);
 		return order;
 	}
 
 	public Order completeOrder() {
 		Order returnOrder = null;
-		System.out.println(order);
-		try{
+		try {
 			returnOrder = orderDB.commitOrder(order);
 		} catch (DataAccessException e) {
-			System.out.println("Error in OrderCtrl, in completing an order");
+			System.err.println("Error in OrderCtrl, in completing an order");
 			e.printStackTrace();
 		}
 		return returnOrder;
@@ -77,7 +73,7 @@ public class OrderCtrl {
 		try {
 			orderDB.updateOrderRunning(orderNo);
 		} catch (DataAccessException e) {
-			System.out.println("Error in OrderCtrl, in updating order to running");
+			System.err.println("Error in OrderCtrl, in updating order to running");
 			e.printStackTrace();
 		}
 	}
@@ -86,7 +82,7 @@ public class OrderCtrl {
 		try {
 			orderDB.updateOrderFinished(orderNo);
 		} catch (DataAccessException e) {
-			System.out.println("Error in OrderCtrl, in updating order to finished");
+			System.err.println("Error in OrderCtrl, in updating order to finished");
 			e.printStackTrace();
 		}
 	}

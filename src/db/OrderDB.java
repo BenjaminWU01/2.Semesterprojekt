@@ -10,15 +10,10 @@ import java.util.List;
 
 import model.Order;
 import model.OrderLine;
-import model.Product;
-import model.StockLine;
 
 public class OrderDB implements OrderDBIF {
 	private static final String findAllOrdersQ = "select * from Orders LEFT JOIN OrderStatus on Orders.idOrderStatus = OrderStatus.idOrderStatus;";
 	private static final String COMMIT_ORDER = "INSERT INTO Orders VALUES(?, ?, ?, ?, ?, ?, ?) ";
-//			+ "SELECT Orders.[idOrder], Product.[idProduct], Product.[idSize] FROM OrderS "
-//			+ "INNER JOIN OrderLine ON Orders.idOrder = OrderLine.idOrder "
-//			+ "INNER JOIN Product ON OrderLine.idProduct = Product.idProduct " + "WHERE Orders.idOrder = 1";
 	private static final String updateOrderRunningQ = "UPDATE Orders SET idOrderStatus = 2 WHERE orderNo = ?";
 	private static final String updateOrderFinishedQ = "UPDATE Orders SET idOrderStatus = 3 WHERE orderNo = ?";
 
@@ -27,12 +22,6 @@ public class OrderDB implements OrderDBIF {
 	private PreparedStatement updateOrderRunning;
 	private PreparedStatement updateOrderFinished;
 	private OrderLineDBIF orderLineDB;
-
-	// Test, delete later
-	public static void main(String[] args) throws DataAccessException {
-		OrderDB odb = new OrderDB();
-		System.out.println(odb.getOrders());
-	}
 
 	public OrderDB() throws DataAccessException {
 		orderLineDB = new OrderLineDB();
@@ -61,7 +50,7 @@ public class OrderDB implements OrderDBIF {
 
 	public Order buildOrder(ResultSet rs) throws SQLException {
 		Order o = new Order(rs.getString("orderNo"), rs.getDate("orderDate").toLocalDate(), rs.getInt("trackingNo"),
-				rs.getInt("invoiceNo"), rs.getInt("idContact"), rs.getString("status"));
+				rs.getInt("invoiceNo"), rs.getString("status"));
 		if (rs.getDate("shipDate") != null) {
 			o.setShipDate(rs.getDate("shipDate").toLocalDate());
 		}
@@ -98,68 +87,55 @@ public class OrderDB implements OrderDBIF {
 		}
 	}
 
-	public Order commitOrderIdentity(Order order) throws DataAccessException {
+	public Order commitOrder(Order order) throws DataAccessException {
 		try {
 			DBConnection.getInstance().getConnection().setAutoCommit(false);
 			commitOrderPS.setString(1, order.getOrderNo());
 			commitOrderPS.setDate(2, Date.valueOf(LocalDate.now()));
+
+			// Hardcoded shipDate to today:
 			commitOrderPS.setDate(3, Date.valueOf(LocalDate.now()));
 //			commitOrderPS.setDate(3, Date.valueOf(order.getShipDate()));
+
 			commitOrderPS.setInt(4, order.getTrackingNo());
 			commitOrderPS.setInt(5, order.getInvoiceNo());
+
+			// Hardcoded customerNo to 1:
 			commitOrderPS.setInt(6, 1);
 //			commitOrderPS.setInt(6, order.getContact().getIdContact());
+
 			commitOrderPS.setInt(7, 1);
+
 			int idOrder = DBConnection.getInstance().executeInsertWithIdentity(commitOrderPS);
-			for (int i = 0; i < order.getOrderLines().size(); i++) {
-				OrderLine ol = (OrderLine) order.getOrderLines().get(i);
-				orderLineDB.commitOrderLine(ol, order.getOrderNo());
-			}
 			DBConnection.getInstance().getConnection().commit();
+			commitOrderLine(order, idOrder);
 		} catch (SQLException e) {
 			if (DBConnection.getInstance().getConnection() != null) {
-
 				try {
-					System.err.println("something went wrong, the order will be rolled back");
+					System.err.println("Something went wrong, the order will be rolled back");
 					DBConnection.getInstance().getConnection().rollback();
 				} catch (SQLException excep) {
 					System.err.println("Sql rollback failed");
 				}
 			}
-
 		}
 		try {
 			DBConnection.getInstance().getConnection().setAutoCommit(true);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return order;
 	}
 
-	public Order commitOrder(Order order) throws DataAccessException {
-		try {
-			DBConnection.getInstance().getConnection().setAutoCommit(false);
-			commitOrderPS.setString(1, order.getOrderNo());
-			commitOrderPS.setDate(2, Date.valueOf(order.getOrderDate()));
-			commitOrderPS.setDate(3, Date.valueOf(LocalDate.now()));
-//			commitOrderPS.setDate(3, Date.valueOf(order.getShipDate()));
-			commitOrderPS.setInt(4, order.getTrackingNo());
-			commitOrderPS.setInt(5, order.getInvoiceNo());
-			commitOrderPS.setInt(6, 1);
-//			commitOrderPS.setInt(6, order.getContact().getIdContact());
-			commitOrderPS.setInt(7, 1);
-			commitOrderPS.execute();
-//			for (int i = 0; i < order.getOrderLines().size(); i++) {
-//				OrderLine ol = (OrderLine) order.getOrderLines().get(i);
-//				orderLineDB.commitOrderLine(ol, order.getOrderNo());
-//			}
-			DBConnection.getInstance().getConnection().commit();
-
-		} catch (SQLException e) {
-			throw new DataAccessException(e, "Error in OrderDB, in commitOrder");
-
+	public void commitOrderLine(Order order, int idOrder) throws DataAccessException {
+		for (int i = 0; i < order.getOrderLines().size(); i++) {
+			OrderLine ol = order.getOrderLines().get(i);
+			System.out.println(ol);
+			try {
+				orderLineDB.commitOrderLineIdentity(ol, idOrder);
+			} catch (SQLException e) {
+				throw new DataAccessException(e, "Error in OrderDB, in commitOrderLine");
+			}
 		}
-		return order;
 	}
 }

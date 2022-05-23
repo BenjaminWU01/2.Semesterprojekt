@@ -11,7 +11,7 @@ import model.Size;
 
 public class OrderLineDB implements OrderLineDBIF {
 
-	private static final String COMMIT_ORDERLINE = "INSERT INTO OrderLine VALUES?, ?, ?, ?";
+	private static final String COMMIT_ORDERLINE = "INSERT INTO OrderLine VALUES (?, ?, ?, ?)";
 
 	private PreparedStatement commitOrderLinePS;
 
@@ -33,6 +33,20 @@ public class OrderLineDB implements OrderLineDBIF {
 		commitOrderLinePS.setInt(3, p.getIdProduct());
 		commitOrderLinePS.setInt(4, p.getSize().getIdSize());
 		commitOrderLinePS.execute();
+
+	}
+	
+	//TEMPORARY TEST, IDENTITY TEST, DELETE LATER
+	public void commitOrderLineIdentity(OrderLine orderLine, int idOrder) throws SQLException {
+
+		Product p = orderLine.getProduct();
+
+		commitOrderLinePS.setInt(1, orderLine.getQuantity());
+		commitOrderLinePS.setInt(2, idOrder);
+		commitOrderLinePS.setInt(3, p.getIdProduct());
+		commitOrderLinePS.setInt(4, p.getSize().getIdSize());
+		System.out.println(orderLine.getQuantity() + "  " + idOrder + "  " + p.getIdProduct() + "  " + p.getSize().getIdSize());
+		commitOrderLinePS.executeUpdate();
 
 	}
 

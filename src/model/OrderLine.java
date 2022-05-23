@@ -24,4 +24,8 @@ public class OrderLine {
 	public void setQuantity(int quantity) {
 		this.quantity = quantity;
 	}
+
+	public String toString() {
+		return "OrderLine prodNo=" + product.getProdNo() + ", quantity=" + quantity;
+	}
 }

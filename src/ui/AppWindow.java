@@ -1,6 +1,5 @@
 package ui;
 
-import java.awt.BorderLayout;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -8,11 +7,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
-import controller.OrderCtrl;
 import controller.ProductCtrl;
-import db.DataAccessException;
-import model.Order;
-import model.OrderLine;
 import model.Product;
 import model.Size;
 
@@ -25,7 +20,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,9 +27,7 @@ import javax.swing.JComboBox;
 import javax.swing.JScrollPane;
 import javax.swing.JLabel;
 import java.awt.Font;
-import javax.swing.JSpinner;
 import javax.swing.SwingConstants;
-import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 
 public class AppWindow extends JFrame {
@@ -47,14 +39,11 @@ public class AppWindow extends JFrame {
 	private JButton btnNewButton_2;
 	private JButton btnNewButton_3;
 	private JButton btnNewButton_4;
-	private OrderWindow ow;
 	private OrderUI oUI;
 	private JTextField textQty;
 	private JComboBox comboBoxSize;
 	private ProductCtrl pc;
 	private List<Product> prod;
-	private Product currentProduct;
-	
 
 	/**
 	 * Launch the application.
@@ -66,24 +55,18 @@ public class AppWindow extends JFrame {
 					AppWindow frame = new AppWindow();
 					frame.setVisible(true);
 				} catch (Exception e) {
-					e.printStackTrace(); 
+					e.printStackTrace();
 				}
 			}
 		});
 	}
 
-	/**
-	 * Create the frame.
-	 * 
-	 * @throws DataAccessException
-	 */
-	public AppWindow() throws DataAccessException {
+	public AppWindow() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//		setBounds(100, 100, 1165, 788);
 		setLocation(0, 0);
 		setSize(new Dimension(960, 1080));
 		contentPane = new JPanel();
-		contentPane.setBackground(new Color(51, 51, 51));
+//		contentPane.setBackground(new Color(51, 51, 51));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
@@ -116,34 +99,27 @@ public class AppWindow extends JFrame {
 		scrollPane.setBounds(513, 157, 544, 449);
 		contentPane.add(scrollPane);
 
-		
-		DefaultTableModel model = new DefaultTableModel(){
-
-		    @Override
-		    public boolean isCellEditable(int row, int column) {
-		       //all cells false
-		       return false;
-		    }
+		//Makes the cells, unable to be edited
+		DefaultTableModel model = new DefaultTableModel() {
+			@Override
+			public boolean isCellEditable(int row, int column) {
+				// all cells false
+				return false;
+			}
 		};
 		table = new JTable(model);
 		model.addColumn("Description");
 		model.addColumn("Product No");
 		model.addColumn("Quantity ordered");
 		scrollPane.setViewportView(table);
-		
-		
+
 		btnNewButton_1 = new JButton("Add");
 		btnNewButton_1.setBorder(null);
 		btnNewButton_1.setBackground(Color.WHITE);
 		btnNewButton_1.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				try {
-					addItem();
-				} catch (SQLException e1) {
-					System.out.println("Couldnt add item to order");
-					e1.printStackTrace();
-				}
+				addItem();
 			}
 		});
 		btnNewButton_1.setFont(new Font("Tahoma", Font.PLAIN, 14));
@@ -172,7 +148,7 @@ public class AppWindow extends JFrame {
 		contentPane.add(btnNewButton_4);
 
 		JLabel lblNewLabel = new JLabel("Create Order");
-		lblNewLabel.setForeground(Color.WHITE);
+		lblNewLabel.setForeground(Color.BLACK);
 		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 25));
 		lblNewLabel.setBounds(389, 29, 200, 43);
 		contentPane.add(lblNewLabel);
@@ -195,11 +171,11 @@ public class AppWindow extends JFrame {
 		lblSize.setBounds(365, 154, 60, 19);
 		contentPane.add(lblSize);
 
-		comboBoxSize = new JComboBox(); //Lav bagefter - SizeDesc + QtyAvailable
+		comboBoxSize = new JComboBox(); // Lav bagefter - SizeDesc + QtyAvailable
 		comboBoxSize.setModel(new DefaultComboBoxModel());
 		comboBoxSize.setBounds(314, 170, 108, 21);
 		contentPane.add(comboBoxSize);
-		
+
 		JButton btnSearch = new JButton("Search");
 		btnSearch.setBorder(null);
 		btnSearch.setBackground(Color.WHITE);
@@ -211,100 +187,75 @@ public class AppWindow extends JFrame {
 		});
 		btnSearch.setBounds(758, 88, 108, 43);
 		contentPane.add(btnSearch);
-
 		init();
 	}
 
-	public void init() throws DataAccessException {
+	public void init() {
 		pc = new ProductCtrl();
 		oUI = new OrderUI();
 		oUI.registerOrder();
 		openWindow();
 	}
+
 	protected void findItem() {
-		
-		
-	    prod = pc.findProduct(txtSearchForProduct.getText().trim().toLowerCase());
+		prod = pc.findProduct(txtSearchForProduct.getText().trim().toLowerCase());
 		List<String> sizes = new ArrayList<>();
-		for(Product product: prod) {
-			sizes.add(product.getSize().getSizeDesc());	
+		for (Product product : prod) {
+			sizes.add(product.getSize().getSizeDesc());
 		}
-		
-		String[] sz  = new String[sizes.size()];
-		for(int i = 0; i < sizes.size(); i++) {
+		String[] sz = new String[sizes.size()];
+		for (int i = 0; i < sizes.size(); i++) {
 			sz[i] = sizes.get(i);
 		}
-		
-		comboBoxSize.setModel(new DefaultComboBoxModel(sz));
-		
+		comboBoxSize.setModel(new DefaultComboBoxModel<>(sz));
 	}
-	
-	protected void addItem() throws SQLException{
+
+	protected void addItem() {
 		String prodNo = txtSearchForProduct.getText().trim();
 		boolean found = false;
 		int i = 0;
 		Size s = null;
-		while(!found || i < prod.size()) {
-			
-			if(prod.get(i).getSize().getSizeDesc().equals(comboBoxSize.getSelectedItem())) {
+		while (!found || i < prod.size()) {
+			if (prod.get(i).getSize().getSizeDesc().equals(comboBoxSize.getSelectedItem())) {
 				s = prod.get(i).getSize();
 				found = true;
 			}
 			i++;
-			
 		}
 		checkInt();
 		int qty = Integer.parseInt(textQty.getText());
-		Order order = oUI.addProduct(prodNo, qty, s);
-		
+		oUI.addProduct(prodNo, qty, s);
 		updateTable();
-		
-		
-		
-		
 	}
-	
+
 	public void updateTable() {
-		
-		
-		Product currProd = prod.get(prod.size()-1);
-		
-		
+		Product currProd = prod.get(prod.size() - 1);
 		String desc = currProd.getProductDescription();
-			System.out.println(desc);
+		System.out.println(desc);
 		String proNo = currProd.getProdNo();
-			System.out.println(proNo);
+		System.out.println(proNo);
 		String qty = textQty.getText();
-			System.out.println(qty);
-		
-		
+		System.out.println(qty);
 		DefaultTableModel model = (DefaultTableModel) table.getModel();
-		
-		
-		model.addRow(new Object[]{desc,proNo,qty});
-		
-		}
-	
+		model.addRow(new Object[] { desc, proNo, qty });
+	}
 
 	public boolean checkInt() {
 		boolean result = false;
 		try {
-			int x = Integer.parseInt(textQty.getText());
 			result = true;
 		} catch (NumberFormatException e) {
-			System.out.println("The input in Quantity must be a number");
+			System.err.println("The input in Quantity must be a number");
 		}
 		return result;
-
 	}
 
-	public void openWindow() throws DataAccessException {
-		ow = new OrderWindow();
+	public void openWindow() {
+		new OrderWindow();
 	}
-	
-	public Order completeOrder() {
-		Order o = oUI.completeOrder();
+
+	public void completeOrder() {
+		oUI.completeOrder();
 		oUI.registerOrder();
-		return o;
 	}
 }

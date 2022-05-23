@@ -8,7 +8,6 @@ import java.util.List;
 
 import model.Product;
 import model.Size;
-import model.StockLine;
 
 public class ProductDB implements ProductDBIF {
 	private static final String FIND_PRODUCT = "SELECT DISTINCT Product.[idProduct], [sizeDesc], Size.[idSize], [prodNo], [prodDesc] from Product "
@@ -21,18 +20,17 @@ public class ProductDB implements ProductDBIF {
 
 	private PreparedStatement findProductPS;
 	private PreparedStatement getAllProductPS;
-	private StockLineDBIF stockLineDB;
 
-	public ProductDB() {
-		stockLineDB = new StockLineDB();
+	public ProductDB() throws DataAccessException {
 		try {
 			findProductPS = DBConnection.getInstance().getConnection().prepareStatement(FIND_PRODUCT);
 			getAllProductPS = DBConnection.getInstance().getConnection().prepareStatement(GET_ALL_PRODUCT);
 		} catch (SQLException e) {
+			throw new DataAccessException(e, "Couldn't prepare statements");
 		}
 	}
 
-	public Product getProduct(String productNo, Size size) {
+	public Product getProduct(String productNo, Size size) throws DataAccessException {
 		Product p = null;
 		try {
 			findProductPS.setString(1, productNo);
@@ -40,54 +38,39 @@ public class ProductDB implements ProductDBIF {
 			ResultSet rs = findProductPS.executeQuery();
 			if (rs.next()) {
 				p = buildProduct(rs);
-				int idProduct = rs.getInt("idProduct");
-				getStockLine(idProduct);
 			}
 		} catch (SQLException e) {
-			System.out.println("Produktet kunne ikke findes");
-			e.printStackTrace();
+			throw new DataAccessException(e,
+					"Couldn't get product with productNo = " + productNo + " and size = " + size);
 		}
 		return p;
 	}
 
-	private Product buildProduct(ResultSet rs) throws SQLException {
-		Size s = new Size(rs.getString("sizeDesc"), rs.getInt("idSize"));
-		Product p = new Product(rs.getString("prodNo"), rs.getString("prodDesc"), s, rs.getInt("idProduct"));
-
+	private Product buildProduct(ResultSet rs) throws DataAccessException {
+		Size s;
+		Product p = null;
+		try {
+			s = new Size(rs.getString("sizeDesc"), rs.getInt("idSize"));
+			p = new Product(rs.getString("prodNo"), rs.getString("prodDesc"), s, rs.getInt("idProduct"));
+		} catch (SQLException e) {
+			throw new DataAccessException(e, "Couldn't build products");
+		}
 		return p;
-
 	}
 
-	public List<StockLine> getStockLine(int idProduct) throws SQLException {
-		List<StockLine> stockLines = stockLineDB.getStockLines(idProduct);
-		return stockLines;
-
-	}
-
-	public void updateStockLine(Product product) {
-
-	}
-
-	public List<Product> buildAllProduct() {
-
-		ArrayList<Product> product = new ArrayList();
+	public List<Product> buildAllProduct() throws DataAccessException {
+		ArrayList<Product> product = new ArrayList<Product>();
 		try {
 			ResultSet rs = getAllProductPS.executeQuery();
 			while (rs.next()) {
-				int x = 0;
 				product.add(buildProduct(rs));
-				stockLineDB.getStockLines(product.get(x).getIdProduct());
-				x++;
 			}
 			for (int i = 0; i < product.size(); i++) {
 				System.out.println(product.get(i).toString());
 			}
-
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new DataAccessException(e, "");
 		}
-
 		return product;
-
 	}
 }
