@@ -62,7 +62,7 @@ public class OrderLineTest {
 		returnedProduct = testOrderLine.getProduct();
 						
 		//Assert
-		assertTrue("", returnedProduct.equals(testProduct));
+		assertTrue("Returned Product object doesn't match", returnedProduct.equals(testProduct));
 	}
 
 	@Test
@@ -86,7 +86,7 @@ public class OrderLineTest {
 		returnQuantity = testOrderLine.getQuantity();
 						
 		//Assert
-		assertEquals("",  testQuantity, returnQuantity);
+		assertEquals("Returned int from getQuantity doesn't match",  testQuantity, returnQuantity);
 	}
 
 }
