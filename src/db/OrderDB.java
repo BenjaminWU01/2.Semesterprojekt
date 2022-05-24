@@ -126,15 +126,16 @@ public class OrderDB implements OrderDBIF {
 			System.out.println(ol);
 			try {
 				orderLineDB.commitOrderLine(ol, idOrder);
-			} catch (SQLException e) {
+			} catch (DataAccessException e) {
 				throw new DataAccessException(e, "Error in OrderDB, in commitOrderLine");
 			}
 		}
 	}
 
-	// ---------------------------------- Future Use Cases/Iterations
-	// ---------------------------------- //
+	
+	// ---------------------------------- Future Use Cases/Iterations ---------------------------------- //
 
+	
 	// Updates the oldest Orders status to running
 	public void updateOrderRunning(String orderNo) throws DataAccessException {
 		try {

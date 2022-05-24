@@ -7,11 +7,11 @@ public class Contact {
 	private String zipcode;
 	private String countrycode;
 	private String city;
-	private String mainProneNo;
+	private String mainPhoneNo;
 	private String mainEmail;
 	private int idContact;
 
-	public Contact(String name, String address, String zipcode, String countrycode, String city, String mainProneNo,
+	public Contact(String name, String address, String zipcode, String countrycode, String city, String mainPhoneNo,
 			String mainEmail, int idContact) {
 		super();
 		this.name = name;
@@ -19,7 +19,7 @@ public class Contact {
 		this.zipcode = zipcode;
 		this.countrycode = countrycode;
 		this.city = city;
-		this.mainProneNo = mainProneNo;
+		this.mainPhoneNo = mainPhoneNo;
 		this.mainEmail = mainEmail;
 		this.setIdContact(idContact);
 	}
@@ -65,11 +65,11 @@ public class Contact {
 	}
 
 	public String getMainProneNo() {
-		return mainProneNo;
+		return mainPhoneNo;
 	}
 
 	public void setMainProneNo(String mainProneNo) {
-		this.mainProneNo = mainProneNo;
+		this.mainPhoneNo = mainProneNo;
 	}
 
 	public String getMainEmail() {

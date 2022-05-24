@@ -4,7 +4,7 @@ public class PaymentTerms {
 
 private String termDesc;
 
-public PaymentTerms() {
+public PaymentTerms(String termDesc) {
 	this.termDesc = termDesc;
 }
 

@@ -8,7 +8,7 @@ public class Cost {
 	private LocalDate dateRegister;
 	private int qtyBought;
 
-	public Cost() {
+	public Cost(int cost, LocalDate dateRegister, int qtyBought) {
 		this.cost = cost;
 		this.dateRegister = dateRegister;
 		this.qtyBought = qtyBought;

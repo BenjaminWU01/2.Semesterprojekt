@@ -11,6 +11,11 @@ public interface OrderDBIF {
 	public Order buildOrder(ResultSet rs) throws DataAccessException;
 	public List<Order> buildOrders(ResultSet rs) throws DataAccessException;
 	public Order commitOrder(Order order) throws DataAccessException;
+	
+	
+	// ---------------------------------- Future Use Cases/Iterations ---------------------------------- //
+	
+	
 	public void updateOrderRunning(String orderNo) throws DataAccessException;
 	public void updateOrderFinished(String orderNo) throws DataAccessException;
 }

@@ -4,7 +4,7 @@ public class Style {
 
 	private int styleNo;
 	
-	public Style() {
+	public Style(int styleNo) {
 		this.styleNo = styleNo;
 	}
 

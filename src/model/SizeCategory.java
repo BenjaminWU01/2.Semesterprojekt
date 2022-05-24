@@ -4,7 +4,7 @@ public class SizeCategory {
 
 	private String sizeCatDesc;
 
-	public SizeCategory() {
+	public SizeCategory(String sizeCatDesc) {
 		this.sizeCatDesc = sizeCatDesc;
 	}
 

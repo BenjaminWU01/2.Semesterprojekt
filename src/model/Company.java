@@ -5,7 +5,7 @@ public class Company {
 	private int CVRno;
 	private int EANno;
 
-	public Company() {
+	public Company(int CVRno, int EANno) {
 		this.CVRno = CVRno;
 		this.EANno = EANno;
 	}

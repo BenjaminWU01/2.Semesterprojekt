@@ -32,6 +32,11 @@ public class Order {
 		this.invoiceNo = invoiceNo;
 		this.status = status;
 	}
+	
+	public Order addOrderLine(OrderLine ol) {
+		orderLines.add(ol);
+		return this;
+	}
 
 	public String getOrderNo() {
 		return orderNo;
@@ -80,17 +85,7 @@ public class Order {
 	public void setOrderLines(ArrayList<OrderLine> orderLines) {
 		this.orderLines = orderLines;
 	}
-
-	public Order addOrderLine(OrderLine ol) {
-		orderLines.add(ol);
-		return this;
-	}
-
-	public String toString() {
-		return "Order [orderNo=" + orderNo + ", trackingNo=" + trackingNo + ", invoiceNo=" + invoiceNo + ", orderDate="
-				+ orderDate + ", shippedDate=" + shipDate + ", status=" + status;
-	}
-
+	
 	public String getStatus() {
 		return this.status;
 	}
@@ -101,5 +96,10 @@ public class Order {
 
 	public Contact getContact() {
 		return this.customer;
+	}
+	
+	public String toString() {
+		return "Order [orderNo=" + orderNo + ", trackingNo=" + trackingNo + ", invoiceNo=" + invoiceNo + ", orderDate="
+				+ orderDate + ", shippedDate=" + shipDate + ", status=" + status;
 	}
 }

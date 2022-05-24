@@ -7,7 +7,7 @@ public class Price {
 	private int price;
 	private LocalDate validFromDate;
 	
-	public Price() {
+	public Price(int price, LocalDate validFromDate) {
 		this.price = price;
 		this.validFromDate = validFromDate;
 		

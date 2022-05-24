@@ -6,8 +6,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import db.DBConnection;
-
 public class DBConnection {
 	private Connection connection = null;
 	private static DBConnection dbConnection;

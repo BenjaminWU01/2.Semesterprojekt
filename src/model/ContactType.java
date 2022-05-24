@@ -4,7 +4,7 @@ public class ContactType {
 
 	private String type;
 	
-	public ContactType() {
+	public ContactType(String type) {
 		this.type = type;
 		
 	}

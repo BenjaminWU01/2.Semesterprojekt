@@ -4,7 +4,7 @@ public class SubCategory {
 	
 	private String subCatDesc;
 
-	public SubCategory() {
+	public SubCategory(String subCatDesc) {
 		this.subCatDesc = subCatDesc;
 	}
 

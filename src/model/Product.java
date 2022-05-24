@@ -2,29 +2,15 @@ package model;
 
 public class Product {
 
-	private String productNo, productDescription;
+	private String prodNo, productDescription;
 	private Size size;
 	private int idProduct;
 
-	public String getProductDescription() {
-		return productDescription;
-	}
-
-	public void setProductDescription(String productDescription) {
-		this.productDescription = productDescription;
-	}
-
-	public Product(String productNo, String productDescription, Size size, int idProduct) {
-		this.productNo = productNo;
+	public Product(String prodNo, String productDescription, Size size, int idProduct) {
+		this.prodNo = prodNo;
 		this.size = size;
 		this.idProduct = idProduct;
 		this.productDescription = productDescription;
-	}
-
-	@Override
-	public String toString() {
-		return "Order [prodNo=" + productNo + ", product description=" + productDescription + ", size="
-				+ size.getSizeDesc();
 	}
 
 	public int getIdProduct() {
@@ -36,7 +22,20 @@ public class Product {
 	}
 
 	public String getProdNo() {
-		return this.productNo;
+		return this.prodNo;
+	}
+	
+	public String getProductDescription() {
+		return productDescription;
 	}
 
+	public void setProductDescription(String productDescription) {
+		this.productDescription = productDescription;
+	}
+
+	@Override
+	public String toString() {
+		return "Order [prodNo=" + prodNo + ", product description=" + productDescription + ", size="
+				+ size.getSizeDesc();
+	}
 }

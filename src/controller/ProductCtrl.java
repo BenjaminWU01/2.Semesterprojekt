@@ -11,7 +11,7 @@ import model.Size;
 
 public class ProductCtrl {
 	private ProductDBIF productDB;
-	private ArrayList<Product> searchedProduct;
+	private ArrayList<Product> searchedProducts;
 
 	public ProductCtrl() {
 		try {
@@ -36,14 +36,14 @@ public class ProductCtrl {
 	public List<Product> findProduct(String prodNo) {
 		List<Product> products = new ArrayList<>();
 		try {
-			searchedProduct = (ArrayList<Product>) productDB.buildAllProduct();
+			searchedProducts = (ArrayList<Product>) productDB.buildAllProduct();
 		} catch (DataAccessException e) {
 			System.out.println("Error in ProductCtrl, in findProduct()");
 			e.printStackTrace();
 		}
-		for (int i = 0; i < searchedProduct.size(); i++) {
-			if (prodNo.equals(searchedProduct.get(i).getProdNo())) {
-				products.add(searchedProduct.get(i));
+		for (int i = 0; i < searchedProducts.size(); i++) {
+			if (prodNo.equals(searchedProducts.get(i).getProdNo())) {
+				products.add(searchedProducts.get(i));
 			}
 		}
 		return products;
