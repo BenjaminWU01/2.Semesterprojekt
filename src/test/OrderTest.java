@@ -62,12 +62,11 @@ public class OrderTest {
 		int testQuantity = 4;
 		OrderLine testOrderLine = new OrderLine(testProduct, testQuantity);
 		
-		int expectedSize;
+		int expectedSize = 1;
 		int actualSize;
 		
 		//Act
 		testOrder.addOrderLine(testOrderLine);
-		expectedSize = 1;
 		actualSize = testOrder.getOrderLines().size();
 		
 		//Assert
