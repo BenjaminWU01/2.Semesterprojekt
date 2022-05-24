@@ -69,30 +69,6 @@ public class OrderDB implements OrderDBIF {
 		return result;
 	}
 
-	// Updates the oldest Orders status to running
-	public void updateOrderRunning(String orderNo) throws DataAccessException {
-		try {
-			DBConnection.getInstance().getConnection().setAutoCommit(false);
-			updateOrderRunning.setString(1, orderNo);
-			updateOrderRunning.execute();
-			DBConnection.getInstance().getConnection().setAutoCommit(true);
-		} catch (SQLException e1) {
-			throw new DataAccessException(e1, "Could not update order " + orderNo + "s status to running.");
-		}
-	}
-
-	// Updates the selected Orders status to finished
-	public void updateOrderFinished(String orderNo) throws DataAccessException {
-		try {
-			DBConnection.getInstance().getConnection().setAutoCommit(false);
-			updateOrderFinished.setString(1, orderNo);
-			updateOrderFinished.execute();
-			DBConnection.getInstance().getConnection().setAutoCommit(true);
-		} catch (SQLException e1) {
-			throw new DataAccessException(e1, "Could not update order " + orderNo + "s status to finished.");
-		}
-	}
-
 	// Commits an Order, and its OrderLines to the DB
 	public Order commitOrder(Order order) throws DataAccessException {
 		try {
@@ -140,10 +116,39 @@ public class OrderDB implements OrderDBIF {
 			OrderLine ol = order.getOrderLines().get(i);
 			System.out.println(ol);
 			try {
-				orderLineDB.commitOrderLineIdentity(ol, idOrder);
+				orderLineDB.commitOrderLine(ol, idOrder);
 			} catch (SQLException e) {
 				throw new DataAccessException(e, "Error in OrderDB, in commitOrderLine");
 			}
 		}
 	}
+	
+	
+	// ---------------------------------- Future Use Cases/Iterations ---------------------------------- //
+	
+	
+	// Updates the oldest Orders status to running
+	public void updateOrderRunning(String orderNo) throws DataAccessException {
+		try {
+			DBConnection.getInstance().getConnection().setAutoCommit(false);
+			updateOrderRunning.setString(1, orderNo);
+			updateOrderRunning.execute();
+			DBConnection.getInstance().getConnection().setAutoCommit(true);
+		} catch (SQLException e1) {
+			throw new DataAccessException(e1, "Could not update order " + orderNo + "s status to running.");
+		}
+	}
+
+	// Updates the selected Orders status to finished
+	public void updateOrderFinished(String orderNo) throws DataAccessException {
+		try {
+			DBConnection.getInstance().getConnection().setAutoCommit(false);
+			updateOrderFinished.setString(1, orderNo);
+			updateOrderFinished.execute();
+			DBConnection.getInstance().getConnection().setAutoCommit(true);
+		} catch (SQLException e1) {
+			throw new DataAccessException(e1, "Could not update order " + orderNo + "s status to finished.");
+		}
+	}
+
 }
