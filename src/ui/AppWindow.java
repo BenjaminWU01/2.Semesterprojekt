@@ -99,7 +99,7 @@ public class AppWindow extends JFrame {
 		scrollPane.setBounds(513, 157, 544, 449);
 		contentPane.add(scrollPane);
 
-		//Makes the cells, unable to be edited
+		// Makes the cells, unable to be edited
 		DefaultTableModel model = new DefaultTableModel() {
 			@Override
 			public boolean isCellEditable(int row, int column) {
@@ -255,6 +255,7 @@ public class AppWindow extends JFrame {
 	}
 
 	public void completeOrder() {
+		// oUI.addCustomer(); vil blive kørt her, hvis en bruger var logget ind
 		oUI.completeOrder();
 		oUI.registerOrder();
 	}
