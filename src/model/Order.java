@@ -18,10 +18,9 @@ public class Order {
 	public Order() {
 		orderLines = new ArrayList<OrderLine>();
 		Random random = new Random();
-		//orderLines = new ArrayList<>();
-		orderNo = "" + random.nextInt();
-		trackingNo = random.nextInt();
-		invoiceNo = random.nextInt();
+		orderNo = "" + random.nextInt(100000000);
+		trackingNo = random.nextInt(100000000);
+		invoiceNo = random.nextInt(100000000);
 		orderDate = LocalDate.now();
 	}
 

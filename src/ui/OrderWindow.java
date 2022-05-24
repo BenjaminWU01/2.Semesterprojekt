@@ -179,7 +179,7 @@ public class OrderWindow {
 	// Finds the oldest order based on Date, from the TABLE, not from DB
 	private static String findOldestOrder() {
 		TableModel checkModel = t_0.getModel();
-		LocalDate oldestOrderDate = LocalDate.now();
+		LocalDate oldestOrderDate = LocalDate.now().plusDays(1);
 		String orderNo = null;
 		for (int i = 0; i < checkModel.getRowCount(); i++) {
 			String date = checkModel.getValueAt(i, 3).toString();
