@@ -13,12 +13,12 @@ import model.OrderLine;
 
 public class OrderDB implements OrderDBIF {
 	private static final String findAllOrdersQ = "select * from Orders LEFT JOIN OrderStatus on Orders.idOrderStatus = OrderStatus.idOrderStatus;";
-	private static final String COMMIT_ORDER = "INSERT INTO Orders VALUES(?, ?, ?, ?, ?, ?, ?) ";
+	private static final String commitOrderQ = "INSERT INTO Orders VALUES(?, ?, ?, ?, ?, ?, ?) ";
 	private static final String updateOrderRunningQ = "UPDATE Orders SET idOrderStatus = 2 WHERE orderNo = ?";
 	private static final String updateOrderFinishedQ = "UPDATE Orders SET idOrderStatus = 3 WHERE orderNo = ?";
 
 	private PreparedStatement findAllOrders;
-	private PreparedStatement commitOrderPS;
+	private PreparedStatement commitOrder;
 	private PreparedStatement updateOrderRunning;
 	private PreparedStatement updateOrderFinished;
 	private OrderLineDBIF orderLineDB;
@@ -28,7 +28,7 @@ public class OrderDB implements OrderDBIF {
 		orderLineDB = new OrderLineDB();
 		try {
 			findAllOrders = DBConnection.getInstance().getConnection().prepareStatement(findAllOrdersQ);
-			commitOrderPS = DBConnection.getInstance().getConnection().prepareStatement(COMMIT_ORDER,
+			commitOrder = DBConnection.getInstance().getConnection().prepareStatement(commitOrderQ,
 					PreparedStatement.RETURN_GENERATED_KEYS);
 			updateOrderRunning = DBConnection.getInstance().getConnection().prepareStatement(updateOrderRunningQ);
 			updateOrderFinished = DBConnection.getInstance().getConnection().prepareStatement(updateOrderFinishedQ);
@@ -97,23 +97,23 @@ public class OrderDB implements OrderDBIF {
 	public Order commitOrder(Order order) throws DataAccessException {
 		try {
 			DBConnection.getInstance().getConnection().setAutoCommit(false);
-			commitOrderPS.setString(1, order.getOrderNo());
-			commitOrderPS.setDate(2, Date.valueOf(LocalDate.now()));
+			commitOrder.setString(1, order.getOrderNo());
+			commitOrder.setDate(2, Date.valueOf(LocalDate.now()));
 
 			// Hardcoded shipDate to today:
-			commitOrderPS.setDate(3, Date.valueOf(LocalDate.now()));
-//			commitOrderPS.setDate(3, Date.valueOf(order.getShipDate()));
+			commitOrder.setDate(3, Date.valueOf(LocalDate.now()));
+//			commitOrder.setDate(3, Date.valueOf(order.getShipDate()));
 
-			commitOrderPS.setInt(4, order.getTrackingNo());
-			commitOrderPS.setInt(5, order.getInvoiceNo());
+			commitOrder.setInt(4, order.getTrackingNo());
+			commitOrder.setInt(5, order.getInvoiceNo());
 
 			// Hardcoded customerNo to 1:
-			commitOrderPS.setInt(6, 1);
-//			commitOrderPS.setInt(6, order.getContact().getIdContact());
+			commitOrder.setInt(6, 1);
+//			commitOrder.setInt(6, order.getContact().getIdContact());
 
-			commitOrderPS.setInt(7, 1);
+			commitOrder.setInt(7, 1);
 
-			int idOrder = DBConnection.getInstance().executeInsertWithIdentity(commitOrderPS);
+			int idOrder = DBConnection.getInstance().executeInsertWithIdentity(commitOrder);
 			DBConnection.getInstance().getConnection().commit();
 			commitOrderLine(order, idOrder);
 		} catch (SQLException e) {

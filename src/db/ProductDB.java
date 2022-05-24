@@ -53,7 +53,7 @@ public class ProductDB implements ProductDBIF {
 			s = new Size(rs.getString("sizeDesc"), rs.getInt("idSize"));
 			p = new Product(rs.getString("prodNo"), rs.getString("prodDesc"), s, rs.getInt("idProduct"));
 		} catch (SQLException e) {
-			throw new DataAccessException(e, "Couldn't build products");
+			throw new DataAccessException(e, "Couldn't build product");
 		}
 		return p;
 	}
@@ -69,7 +69,7 @@ public class ProductDB implements ProductDBIF {
 				System.out.println(product.get(i).toString());
 			}
 		} catch (SQLException e) {
-			throw new DataAccessException(e, "");
+			throw new DataAccessException(e, "Couldn't build all products");
 		}
 		return product;
 	}
