@@ -13,12 +13,12 @@ import model.OrderLine;
 
 public class OrderDB implements OrderDBIF {
 	private static final String findAllOrdersQ = "select * from Orders LEFT JOIN OrderStatus on Orders.idOrderStatus = OrderStatus.idOrderStatus;";
-	private static final String COMMIT_ORDER = "INSERT INTO Orders VALUES(?, ?, ?, ?, ?, ?, ?) ";
+	private static final String commitOrderQ = "INSERT INTO Orders VALUES(?, ?, ?, ?, ?, ?, ?) ";
 	private static final String updateOrderRunningQ = "UPDATE Orders SET idOrderStatus = 2 WHERE orderNo = ?";
 	private static final String updateOrderFinishedQ = "UPDATE Orders SET idOrderStatus = 3 WHERE orderNo = ?";
 
 	private PreparedStatement findAllOrders;
-	private PreparedStatement commitOrderPS;
+	private PreparedStatement commitOrder;
 	private PreparedStatement updateOrderRunning;
 	private PreparedStatement updateOrderFinished;
 	private OrderLineDBIF orderLineDB;
@@ -28,7 +28,7 @@ public class OrderDB implements OrderDBIF {
 		orderLineDB = new OrderLineDB();
 		try {
 			findAllOrders = DBConnection.getInstance().getConnection().prepareStatement(findAllOrdersQ);
-			commitOrderPS = DBConnection.getInstance().getConnection().prepareStatement(COMMIT_ORDER,
+			commitOrder = DBConnection.getInstance().getConnection().prepareStatement(commitOrderQ,
 					PreparedStatement.RETURN_GENERATED_KEYS);
 			updateOrderRunning = DBConnection.getInstance().getConnection().prepareStatement(updateOrderRunningQ);
 			updateOrderFinished = DBConnection.getInstance().getConnection().prepareStatement(updateOrderFinishedQ);
@@ -51,69 +51,54 @@ public class OrderDB implements OrderDBIF {
 	}
 
 	// Builds a single Order object from the ResultSet from the DB
-	public Order buildOrder(ResultSet rs) throws SQLException {
-		Order o = new Order(rs.getString("orderNo"), rs.getDate("orderDate").toLocalDate(), rs.getInt("trackingNo"),
-				rs.getInt("invoiceNo"), rs.getString("status"));
-		if (rs.getDate("shipDate") != null) {
-			o.setShipDate(rs.getDate("shipDate").toLocalDate());
+	public Order buildOrder(ResultSet rs) throws DataAccessException {
+		Order o = null;
+		try {
+			o = new Order(rs.getString("orderNo"), rs.getDate("orderDate").toLocalDate(), rs.getInt("trackingNo"),
+					rs.getInt("invoiceNo"), rs.getString("status"));
+			if (rs.getDate("shipDate") != null) {
+				o.setShipDate(rs.getDate("shipDate").toLocalDate());
+			}
+		} catch (SQLException e) {
+			throw new DataAccessException(e, "Couldn't build order");
 		}
 		return o;
 	}
 
 	// Builds every Order object from the ResultSet from the DB
-	public List<Order> buildOrders(ResultSet rs) throws SQLException {
+	public List<Order> buildOrders(ResultSet rs) throws DataAccessException {
 		List<Order> result = new ArrayList<>();
-		while (rs.next()) {
-			result.add(buildOrder(rs));
+		try {
+			while (rs.next()) {
+				result.add(buildOrder(rs));
+			}
+		} catch (SQLException e) {
+			throw new DataAccessException(e, "Couldn't build orders");
 		}
 		return result;
-	}
-
-	// Updates the oldest Orders status to running
-	public void updateOrderRunning(String orderNo) throws DataAccessException {
-		try {
-			DBConnection.getInstance().getConnection().setAutoCommit(false);
-			updateOrderRunning.setString(1, orderNo);
-			updateOrderRunning.execute();
-			DBConnection.getInstance().getConnection().setAutoCommit(true);
-		} catch (SQLException e1) {
-			throw new DataAccessException(e1, "Could not update order " + orderNo + "s status to running.");
-		}
-	}
-
-	// Updates the selected Orders status to finished
-	public void updateOrderFinished(String orderNo) throws DataAccessException {
-		try {
-			DBConnection.getInstance().getConnection().setAutoCommit(false);
-			updateOrderFinished.setString(1, orderNo);
-			updateOrderFinished.execute();
-			DBConnection.getInstance().getConnection().setAutoCommit(true);
-		} catch (SQLException e1) {
-			throw new DataAccessException(e1, "Could not update order " + orderNo + "s status to finished.");
-		}
 	}
 
 	// Commits an Order, and its OrderLines to the DB
 	public Order commitOrder(Order order) throws DataAccessException {
 		try {
 			DBConnection.getInstance().getConnection().setAutoCommit(false);
-			commitOrderPS.setString(1, order.getOrderNo());
-			commitOrderPS.setDate(2, Date.valueOf(LocalDate.now()));
+			commitOrder.setString(1, order.getOrderNo());
+			commitOrder.setDate(2, Date.valueOf(LocalDate.now()));
 
 			// Hardcoded shipDate to today:
-			commitOrderPS.setDate(3, Date.valueOf(LocalDate.now()));
-//			commitOrderPS.setDate(3, Date.valueOf(order.getShipDate()));
+			commitOrder.setDate(3, Date.valueOf(LocalDate.now()));
+//			commitOrder.setDate(3, Date.valueOf(order.getShipDate()));
 
-			commitOrderPS.setInt(4, order.getTrackingNo());
-			commitOrderPS.setInt(5, order.getInvoiceNo());
+			commitOrder.setInt(4, order.getTrackingNo());
+			commitOrder.setInt(5, order.getInvoiceNo());
 
 			// Hardcoded customerNo to 1:
-			commitOrderPS.setInt(6, 1);
-//			commitOrderPS.setInt(6, order.getContact().getIdContact());
+			commitOrder.setInt(6, 1);
+//			commitOrder.setInt(6, order.getContact().getIdContact());
 
-			commitOrderPS.setInt(7, 1);
+			commitOrder.setInt(7, 1);
 
-			int idOrder = DBConnection.getInstance().executeInsertWithIdentity(commitOrderPS);
+			int idOrder = DBConnection.getInstance().executeInsertWithIdentity(commitOrder);
 			DBConnection.getInstance().getConnection().commit();
 			commitOrderLine(order, idOrder);
 		} catch (SQLException e) {
@@ -140,10 +125,38 @@ public class OrderDB implements OrderDBIF {
 			OrderLine ol = order.getOrderLines().get(i);
 			System.out.println(ol);
 			try {
-				orderLineDB.commitOrderLineIdentity(ol, idOrder);
+				orderLineDB.commitOrderLine(ol, idOrder);
 			} catch (SQLException e) {
 				throw new DataAccessException(e, "Error in OrderDB, in commitOrderLine");
 			}
 		}
 	}
+
+	// ---------------------------------- Future Use Cases/Iterations
+	// ---------------------------------- //
+
+	// Updates the oldest Orders status to running
+	public void updateOrderRunning(String orderNo) throws DataAccessException {
+		try {
+			DBConnection.getInstance().getConnection().setAutoCommit(false);
+			updateOrderRunning.setString(1, orderNo);
+			updateOrderRunning.execute();
+			DBConnection.getInstance().getConnection().setAutoCommit(true);
+		} catch (SQLException e) {
+			throw new DataAccessException(e, "Could not update order " + orderNo + "s status to running.");
+		}
+	}
+
+	// Updates the selected Orders status to finished
+	public void updateOrderFinished(String orderNo) throws DataAccessException {
+		try {
+			DBConnection.getInstance().getConnection().setAutoCommit(false);
+			updateOrderFinished.setString(1, orderNo);
+			updateOrderFinished.execute();
+			DBConnection.getInstance().getConnection().setAutoCommit(true);
+		} catch (SQLException e) {
+			throw new DataAccessException(e, "Could not update order " + orderNo + "s status to finished.");
+		}
+	}
+
 }

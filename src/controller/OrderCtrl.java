@@ -3,8 +3,9 @@ package controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import db.OrderDB;
+import db.OrderDBIF;
 import db.DataAccessException;
+import db.OrderDB;
 import model.Contact;
 import model.Order;
 import model.OrderLine;
@@ -15,7 +16,7 @@ public class OrderCtrl {
 	private ProductCtrl productCtrl;
 	private Order order;
 	private UserSession userSession;
-	private OrderDB orderDB;
+	private OrderDBIF orderDB;
 
 	// Constructs a new OrderCtrl object
 	public OrderCtrl() {
@@ -75,7 +76,11 @@ public class OrderCtrl {
 		}
 		return returnOrder;
 	}
+	
+	
+	// ---------------------------------- Future Use Cases/Iterations ---------------------------------- //
 
+	
 	// Updates the oldest orders status to running
 	public void updateOrderRunning(String orderNo) {
 		try {

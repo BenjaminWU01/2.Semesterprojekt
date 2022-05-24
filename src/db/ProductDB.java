@@ -10,50 +10,50 @@ import model.Product;
 import model.Size;
 
 public class ProductDB implements ProductDBIF {
-	private static final String FIND_PRODUCT = "SELECT DISTINCT Product.[idProduct], [sizeDesc], Size.[idSize], [prodNo], [prodDesc] from Product "
+	private static final String findProductQ = "SELECT DISTINCT Product.[idProduct], [sizeDesc], Size.[idSize], [prodNo], [prodDesc] from Product "
 			+ "LEFT JOIN Size " + "ON Size.idSize = Product.idSize " + "INNER JOIN ProductStockLine "
 			+ "ON ProductStockLine.idProduct = Product.idProduct" + " INNER JOIN StockLine "
 			+ "ON ProductStockLine.idStockLine = StockLine.idStockLine" + " WHERE prodNo = ? and sizeDesc = ?  ";
-	private static final String GET_ALL_PRODUCT = "SELECT DISTINCT Product.[idProduct], [sizeDesc], Size.[idSize], [prodNo], [prodDesc] from Product INNER JOIN Size ON Product.idSize = Size.idSize "
+	private static final String findAllProductsQ = "SELECT DISTINCT Product.[idProduct], [sizeDesc], Size.[idSize], [prodNo], [prodDesc] from Product INNER JOIN Size ON Product.idSize = Size.idSize "
 			+ "INNER JOIN ProductStockLine " + "ON ProductStockLine.idProduct = Product.idProduct"
 			+ " INNER JOIN StockLine " + "ON ProductStockLine.idStockLine = StockLine.idStockLine";
 
-	private PreparedStatement findProductPS;
-	private PreparedStatement getAllProductPS;
+	private PreparedStatement findProduct;
+	private PreparedStatement findAllProducts;
 
 	public ProductDB() throws DataAccessException {
 		try {
-			findProductPS = DBConnection.getInstance().getConnection().prepareStatement(FIND_PRODUCT);
-			getAllProductPS = DBConnection.getInstance().getConnection().prepareStatement(GET_ALL_PRODUCT);
+			findProduct = DBConnection.getInstance().getConnection().prepareStatement(findProductQ);
+			findAllProducts = DBConnection.getInstance().getConnection().prepareStatement(findAllProductsQ);
 		} catch (SQLException e) {
 			throw new DataAccessException(e, "Couldn't prepare statements");
 		}
 	}
 
-	public Product getProduct(String productNo, Size size) throws DataAccessException {
+	public Product getProduct(String prodNo, Size size) throws DataAccessException {
 		Product p = null;
 		try {
-			findProductPS.setString(1, productNo);
-			findProductPS.setString(2, size.getSizeDesc());
-			ResultSet rs = findProductPS.executeQuery();
+			findProduct.setString(1, prodNo);
+			findProduct.setString(2, size.getSizeDesc());
+			ResultSet rs = findProduct.executeQuery();
 			if (rs.next()) {
 				p = buildProduct(rs);
 			}
 		} catch (SQLException e) {
 			throw new DataAccessException(e,
-					"Couldn't get product with productNo = " + productNo + " and size = " + size);
+					"Couldn't get product with productNo = " + prodNo + " and size = " + size);
 		}
 		return p;
 	}
 
-	private Product buildProduct(ResultSet rs) throws DataAccessException {
+	public Product buildProduct(ResultSet rs) throws DataAccessException {
 		Size s;
 		Product p = null;
 		try {
 			s = new Size(rs.getString("sizeDesc"), rs.getInt("idSize"));
 			p = new Product(rs.getString("prodNo"), rs.getString("prodDesc"), s, rs.getInt("idProduct"));
 		} catch (SQLException e) {
-			throw new DataAccessException(e, "Couldn't build products");
+			throw new DataAccessException(e, "Couldn't build product");
 		}
 		return p;
 	}
@@ -61,7 +61,7 @@ public class ProductDB implements ProductDBIF {
 	public List<Product> buildAllProduct() throws DataAccessException {
 		ArrayList<Product> product = new ArrayList<Product>();
 		try {
-			ResultSet rs = getAllProductPS.executeQuery();
+			ResultSet rs = findAllProducts.executeQuery();
 			while (rs.next()) {
 				product.add(buildProduct(rs));
 			}
@@ -69,7 +69,7 @@ public class ProductDB implements ProductDBIF {
 				System.out.println(product.get(i).toString());
 			}
 		} catch (SQLException e) {
-			throw new DataAccessException(e, "");
+			throw new DataAccessException(e, "Couldn't build all products");
 		}
 		return product;
 	}

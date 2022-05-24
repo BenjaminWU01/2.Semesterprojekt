@@ -33,9 +33,6 @@ public class ProductCtrl {
 		return product;
 	}
 
-//	public void updateStockLine(Product p) {
-//
-//	}
 	public List<Product> findProduct(String prodNo) {
 		List<Product> products = new ArrayList<>();
 		try {
