@@ -66,7 +66,6 @@ public class AppWindow extends JFrame {
 		setLocation(0, 0);
 		setSize(new Dimension(960, 1080));
 		contentPane = new JPanel();
-//		contentPane.setBackground(new Color(51, 51, 51));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
@@ -171,7 +170,7 @@ public class AppWindow extends JFrame {
 		lblSize.setBounds(365, 154, 60, 19);
 		contentPane.add(lblSize);
 
-		comboBoxSize = new JComboBox(); // Lav bagefter - SizeDesc + QtyAvailable
+		comboBoxSize = new JComboBox(); 
 		comboBoxSize.setModel(new DefaultComboBoxModel());
 		comboBoxSize.setBounds(314, 170, 108, 21);
 		contentPane.add(comboBoxSize);
@@ -258,5 +257,6 @@ public class AppWindow extends JFrame {
 		// oUI.addCustomer(); vil blive kørt her, hvis en bruger var logget ind
 		oUI.completeOrder();
 		oUI.registerOrder();
+		OrderWindow.updateLists();
 	}
 }

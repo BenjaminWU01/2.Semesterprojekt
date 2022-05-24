@@ -23,6 +23,7 @@ public class OrderDB implements OrderDBIF {
 	private PreparedStatement updateOrderFinished;
 	private OrderLineDBIF orderLineDB;
 
+	// Constructs an OrderDB object, and initiates prepared statements
 	public OrderDB() throws DataAccessException {
 		orderLineDB = new OrderLineDB();
 		try {
@@ -36,6 +37,7 @@ public class OrderDB implements OrderDBIF {
 		}
 	}
 
+	// Gets all Orders from the DB
 	public List<Order> getOrders() throws DataAccessException {
 		ResultSet rs;
 		try {
@@ -48,6 +50,7 @@ public class OrderDB implements OrderDBIF {
 
 	}
 
+	// Builds a single Order object from the ResultSet from the DB
 	public Order buildOrder(ResultSet rs) throws SQLException {
 		Order o = new Order(rs.getString("orderNo"), rs.getDate("orderDate").toLocalDate(), rs.getInt("trackingNo"),
 				rs.getInt("invoiceNo"), rs.getString("status"));
@@ -57,6 +60,7 @@ public class OrderDB implements OrderDBIF {
 		return o;
 	}
 
+	// Builds every Order object from the ResultSet from the DB
 	public List<Order> buildOrders(ResultSet rs) throws SQLException {
 		List<Order> result = new ArrayList<>();
 		while (rs.next()) {
@@ -65,6 +69,7 @@ public class OrderDB implements OrderDBIF {
 		return result;
 	}
 
+	// Updates the oldest Orders status to running
 	public void updateOrderRunning(String orderNo) throws DataAccessException {
 		try {
 			DBConnection.getInstance().getConnection().setAutoCommit(false);
@@ -76,6 +81,7 @@ public class OrderDB implements OrderDBIF {
 		}
 	}
 
+	// Updates the selected Orders status to finished
 	public void updateOrderFinished(String orderNo) throws DataAccessException {
 		try {
 			DBConnection.getInstance().getConnection().setAutoCommit(false);
@@ -87,6 +93,7 @@ public class OrderDB implements OrderDBIF {
 		}
 	}
 
+	// Commits an Order, and its OrderLines to the DB
 	public Order commitOrder(Order order) throws DataAccessException {
 		try {
 			DBConnection.getInstance().getConnection().setAutoCommit(false);
@@ -127,6 +134,7 @@ public class OrderDB implements OrderDBIF {
 		return order;
 	}
 
+	// Commits an Orders OrderLines to the DB
 	public void commitOrderLine(Order order, int idOrder) throws DataAccessException {
 		for (int i = 0; i < order.getOrderLines().size(); i++) {
 			OrderLine ol = order.getOrderLines().get(i);

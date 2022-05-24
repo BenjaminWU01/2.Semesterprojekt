@@ -3,7 +3,6 @@ package ui;
 import controller.*;
 import model.Order;
 
-import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -35,12 +34,11 @@ public class OrderWindow {
 	private static JLabel l_0;
 	private static JButton b_0;
 	private static JButton b_1;
-	private static BorderFactory bf;
 
 	// Constructor for the OrderWindow class
 	public OrderWindow() {
-		
-		// Initiate the jframe components
+
+		// Initiate the Jframe components
 		f = new JFrame();
 		t_0 = new JTable(new DefaultTableModel(), null);
 		t_1 = new JTable(new DefaultTableModel(), null);
@@ -52,7 +50,7 @@ public class OrderWindow {
 		l_1 = new JLabel("Current orders: ");
 		b_0 = new JButton("Begin order");
 		b_1 = new JButton("Finish order");
-		
+
 		// Action Listeners for buttons
 		b_0.addMouseListener(new MouseAdapter() {
 			@Override
@@ -81,7 +79,7 @@ public class OrderWindow {
 		p_1.add(sp_1);
 		p_1.add(b_1);
 
-		// Misc. jframe setup
+		// Misc. Jframe setup
 		f.setResizable(false);
 		f.setTitle("Current Order");
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -118,14 +116,14 @@ public class OrderWindow {
 
 	}
 
-	// Fetches all orders from the database
+	// Fetches all Orders from the DB
 	private static List<Order> getOrders() {
 		OrderCtrl oc = new OrderCtrl();
 		return oc.getOrders();
 	}
 
 	// Fetches data from getOrders() and updates the lists
-	private static void updateLists() {
+	public static void updateLists() {
 		List<Order> list = getOrders();
 		List<Order> waitingList = new ArrayList<>();
 		List<Order> currentList = new ArrayList<>();
@@ -176,7 +174,7 @@ public class OrderWindow {
 		t_1.setModel(dtm);
 	}
 
-	// Finds the oldest order based on Date, from the TABLE, not from DB
+	// Finds the oldest Order based on Date, from the TABLE, not from DB
 	private static String findOldestOrder() {
 		TableModel checkModel = t_0.getModel();
 		LocalDate oldestOrderDate = LocalDate.now().plusDays(1);
@@ -194,14 +192,14 @@ public class OrderWindow {
 		return orderNo;
 	}
 
-	// Updates the oldest orders status to running
+	// Updates the oldest Orders status to running, and refreshes the lists
 	private static void updateOrderRunning() {
 		OrderCtrl oc = new OrderCtrl();
 		oc.updateOrderRunning(findOldestOrder());
 		updateLists();
 	}
 
-	// Updates the selected orders status to finished
+	// Updates the selected Orders status to finished, and refreshes the lists
 	private static void updateOrderFinished(String orderNo) {
 		OrderCtrl oc = new OrderCtrl();
 		oc.updateOrderFinished(orderNo);

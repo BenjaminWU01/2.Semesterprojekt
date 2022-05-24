@@ -17,6 +17,7 @@ public class OrderCtrl {
 	private UserSession userSession;
 	private OrderDB orderDB;
 
+	// Constructs a new OrderCtrl object
 	public OrderCtrl() {
 		userSession = UserSession.getInstance();
 		productCtrl = new ProductCtrl();
@@ -28,6 +29,7 @@ public class OrderCtrl {
 		}
 	}
 
+	// Gets all orders from the DB
 	public List<Order> getOrders() {
 		List<Order> list = new ArrayList<>();
 		try {
@@ -39,12 +41,14 @@ public class OrderCtrl {
 		return list;
 	}
 
+	// Creates a new Order object, that the class holds
 	public Order createOrder() {
 		Order order = new Order();
 		this.order = order;
 		return order;
 	}
 
+	// Adds a product to the order, from a given prodNo, quantity and size
 	public Order addProduct(String prodNo, int quantity, Size size) {
 		Product p = productCtrl.getProduct(prodNo, size);
 		OrderLine ol = new OrderLine(p, quantity);
@@ -52,12 +56,15 @@ public class OrderCtrl {
 		return order;
 	}
 
+	// Adds a contact to the order, from the userSession, containing the customer
+	// logged in
 	public Order addCustomer() {
 		Contact customer = userSession.getCustomer();
 		order.addCustomer(customer);
 		return order;
 	}
 
+	// Completes the order and commits it to the DB
 	public Order completeOrder() {
 		Order returnOrder = null;
 		try {
@@ -69,6 +76,7 @@ public class OrderCtrl {
 		return returnOrder;
 	}
 
+	// Updates the oldest orders status to running
 	public void updateOrderRunning(String orderNo) {
 		try {
 			orderDB.updateOrderRunning(orderNo);
@@ -78,6 +86,7 @@ public class OrderCtrl {
 		}
 	}
 
+	// Updates the selected orders status to finished
 	public void updateOrderFinished(String orderNo) {
 		try {
 			orderDB.updateOrderFinished(orderNo);
