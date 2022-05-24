@@ -51,20 +51,29 @@ public class OrderDB implements OrderDBIF {
 	}
 
 	// Builds a single Order object from the ResultSet from the DB
-	public Order buildOrder(ResultSet rs) throws SQLException {
-		Order o = new Order(rs.getString("orderNo"), rs.getDate("orderDate").toLocalDate(), rs.getInt("trackingNo"),
-				rs.getInt("invoiceNo"), rs.getString("status"));
-		if (rs.getDate("shipDate") != null) {
-			o.setShipDate(rs.getDate("shipDate").toLocalDate());
+	public Order buildOrder(ResultSet rs) throws DataAccessException {
+		Order o = null;
+		try {
+			o = new Order(rs.getString("orderNo"), rs.getDate("orderDate").toLocalDate(), rs.getInt("trackingNo"),
+					rs.getInt("invoiceNo"), rs.getString("status"));
+			if (rs.getDate("shipDate") != null) {
+				o.setShipDate(rs.getDate("shipDate").toLocalDate());
+			}
+		} catch (SQLException e) {
+			throw new DataAccessException(e, "Couldn't build order");
 		}
 		return o;
 	}
 
 	// Builds every Order object from the ResultSet from the DB
-	public List<Order> buildOrders(ResultSet rs) throws SQLException {
+	public List<Order> buildOrders(ResultSet rs) throws DataAccessException {
 		List<Order> result = new ArrayList<>();
-		while (rs.next()) {
-			result.add(buildOrder(rs));
+		try {
+			while (rs.next()) {
+				result.add(buildOrder(rs));
+			}
+		} catch (SQLException e) {
+			throw new DataAccessException(e, "Couldn't build orders");
 		}
 		return result;
 	}
@@ -122,11 +131,10 @@ public class OrderDB implements OrderDBIF {
 			}
 		}
 	}
-	
-	
-	// ---------------------------------- Future Use Cases/Iterations ---------------------------------- //
-	
-	
+
+	// ---------------------------------- Future Use Cases/Iterations
+	// ---------------------------------- //
+
 	// Updates the oldest Orders status to running
 	public void updateOrderRunning(String orderNo) throws DataAccessException {
 		try {
@@ -134,8 +142,8 @@ public class OrderDB implements OrderDBIF {
 			updateOrderRunning.setString(1, orderNo);
 			updateOrderRunning.execute();
 			DBConnection.getInstance().getConnection().setAutoCommit(true);
-		} catch (SQLException e1) {
-			throw new DataAccessException(e1, "Could not update order " + orderNo + "s status to running.");
+		} catch (SQLException e) {
+			throw new DataAccessException(e, "Could not update order " + orderNo + "s status to running.");
 		}
 	}
 
@@ -146,8 +154,8 @@ public class OrderDB implements OrderDBIF {
 			updateOrderFinished.setString(1, orderNo);
 			updateOrderFinished.execute();
 			DBConnection.getInstance().getConnection().setAutoCommit(true);
-		} catch (SQLException e1) {
-			throw new DataAccessException(e1, "Could not update order " + orderNo + "s status to finished.");
+		} catch (SQLException e) {
+			throw new DataAccessException(e, "Could not update order " + orderNo + "s status to finished.");
 		}
 	}
 
