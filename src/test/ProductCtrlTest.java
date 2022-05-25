@@ -7,7 +7,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import controller.ProductCtrl;
-import db.DataAccessException;
 import model.Product;
 import model.Size;
 

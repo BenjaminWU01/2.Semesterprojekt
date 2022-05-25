@@ -6,7 +6,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import model.Order;
 import model.OrderLine;
 import model.Product;
 import model.Size;
